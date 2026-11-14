@@ -3,154 +3,317 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MaizeShift Jalisco – Space Tapatíos</title>
+<title>MaizeShift Jalisco – Climate-Smart Crop Rotation Explorer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--bg:#f6f8fc;--card:#fff;--ink:#10224a;--mut:#5b6b8c;--line:#dde4f0;--acc:#1f6feb;--warm:#e0701b;--ok:#1f9a57}
-@media (prefers-color-scheme:dark){:root{--bg:#070d22;--card:#0f1a3a;--ink:#eef2ff;--mut:#9fb0d6;--line:#22305e;--acc:#6ea4ff;--warm:#ff9a4d;--ok:#46d28a}}
+:root{--bg:#f3f6fb;--card:#fff;--ink:#10224a;--mut:#5b6b8c;--line:#dde4f0;--acc:#1f6feb;--warm:#e0701b;--ok:#1f9a57;--hd:#0b1d4d}
+@media (prefers-color-scheme:dark){:root{--bg:#070d22;--card:#0f1a3a;--ink:#eef2ff;--mut:#9fb0d6;--line:#22305e;--acc:#6ea4ff;--warm:#ff9a4d;--ok:#46d28a;--hd:#050a1c}}
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
-header{padding:28px 20px 8px;max-width:980px;margin:auto}
-h1{margin:0;font-size:clamp(26px,5vw,38px)}
-header p{color:var(--mut);margin:6px 0 0;max-width:720px}
-main{max-width:980px;margin:auto;padding:12px 20px 40px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-select{font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.kpi{border:1px solid var(--line);border-radius:12px;padding:14px}
-.kpi b{display:block;font-size:28px}
-.kpi span{color:var(--mut);font-size:14px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px}
-.chartbox{position:relative;height:300px}
-h2{font-size:19px;margin:0 0 8px}
-ul{padding-left:20px;margin:8px 0}
-li{margin:6px 0}
-.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--mut);margin-right:6px}
-#status{color:var(--mut)}
-.err{color:#d33}
-small,footer{color:var(--mut);font-size:13px}
+.top{background:var(--hd);color:#fff;padding:22px 20px}
+.top div{max-width:1100px;margin:auto}
+.top h1{margin:0;font-size:clamp(24px,4.5vw,34px)}
+.top p{margin:6px 0 0;color:#b8c7ee;max-width:780px}
+main{max-width:1100px;margin:auto;padding:4px 20px 36px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px}
+h2{font-size:18px;margin:0 0 8px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;border-left:5px solid var(--acc)}
+.kpi.w{border-left-color:var(--warm)}.kpi.g{border-left-color:var(--ok)}
+.kpi b{display:block;font-size:28px}.kpi span{color:var(--mut);font-size:13px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:16px}
+.cb{position:relative;height:290px}
+#map{height:470px;border-radius:10px;border:1px solid var(--line)}
+select{font:inherit;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
+tr.r{cursor:pointer}tr.r:hover,tr.sel{background:rgba(31,111,235,.12)}
+.wrap{overflow-x:auto}
+.leg span{display:inline-block;width:12px;height:12px;border-radius:50%;margin:0 4px 0 12px;vertical-align:middle}
+li{margin:6px 0}input[type=range]{width:100%}#rot label span{display:block;font-size:13px;margin-top:8px}.btn{font:inherit;font-size:13px;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}.btn:hover{border-color:var(--acc)}small,footer{color:var(--mut);font-size:13px}.err{color:#d33}
 </style>
 </head>
 <body>
-<header>
+<div class="top"><div>
   <h1>🌽 MaizeShift Jalisco</h1>
-  <p>How is the rainfed maize growing season (June–October) changing in Jalisco? NASA climate data, turned into clear signals and practical adaptation ideas for local growers.</p>
-</header>
+  <p data-es='Herramienta de apoyo a decisiones para explorar rotaciones de cultivos en Jalisco: datos climáticos y de humedad del suelo de la NASA, características de suelo y cultivos, y las prioridades del agricultor.'>A decision-support tool to explore crop rotations in Jalisco: NASA climate and soil-wetness data, soil and crop characteristics, and the farmer’s priorities.</p>
+</div></div>
 <main>
-  <div class="card">
-    <div class="row">
-      <label for="zone"><b>Maize region:</b></label>
-      <select id="zone"></select>
-      <span id="status">Loading NASA data…</span>
+  <div class="card" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <b data-es='Región:'>Region:</b><select id="zone"></select><span id="status" style="color:var(--mut)">Loading NASA data…</span><button class="btn" id="csv1" data-es='Descargar CSV'>Download CSV</button><button class="btn" id="csv2" data-es='CSV de todas las regiones'>All regions CSV</button><button class="btn" id="lang">ES</button>
+  </div>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card" id="rot"><h2 data-es='Explorador de rotaciones de cultivos'>Crop-rotation explorer</h2>
+    <p data-es='Elige tu región (arriba), tu tipo de suelo y tus prioridades. MaizeShift combina clima y humedad del suelo de la NASA con características de cultivos para comparar rotaciones.'>Pick your region (above), soil type and priorities. MaizeShift combines NASA climate and soil-wetness data with crop characteristics to compare rotations.</p>
+    <div class="g2"><div>
+      <label><b data-es='Tipo de suelo'>Soil type</b><br><select id="soil"><option value="sand" data-es='Arenoso (drena rápido)'>Sandy (drains fast)</option><option value="loam" selected data-es='Franco'>Loam</option><option value="clay" data-es='Arcilloso (retiene agua)'>Clay (holds water)</option></select></label>
+      <p><label><b data-es='Riego disponible'>Irrigation</b><br><select id="irr"><option value="none" data-es='Ninguno (temporal)'>None (rainfed)</option><option value="lim" data-es='Limitado (riego de auxilio)'>Limited (supplemental)</option></select></label></p>
+      <b data-es='Tus prioridades (0–5)'>Your priorities (0–5)</b>
+      <label><span data-es='Disponibilidad de agua'>Water security</span><input type="range" id="p_w" min="0" max="5" value="4"></label>
+      <label><span data-es='Salud del suelo'>Soil health</span><input type="range" id="p_s" min="0" max="5" value="4"></label>
+      <label><span data-es='Ingreso'>Income</span><input type="range" id="p_i" min="0" max="5" value="3"></label>
+      <label><span data-es='Estabilidad ante riesgo climático'>Stability under climate risk</span><input type="range" id="p_r" min="0" max="5" value="3"></label>
+      <label><span data-es='Bajo costo de insumos'>Low input cost</span><input type="range" id="p_c" min="0" max="5" value="3"></label>
+    </div><div id="rres"></div></div></div>
+
+  <div class="g2">
+    <div class="card"><h2 data-es='Mapa de regiones maiceras'>Map of maize regions</h2>
+      <div id="map"></div>
+      <small class="leg"><i style="font-style:normal" data-es="Calentamiento 2010–2025 vs 1995–2009:">Warming 2010–2025 vs 1995–2009:</i> <span style="background:#4a90e2"></span>&lt; 0.3 °C <span style="background:#f5c542"></span>0.3–0.7 °C <span style="background:#e0701b"></span>&gt; 0.7 °C · <i style="font-style:normal" data-es="clic en una región">click a region</i></small>
+    </div>
+    <div class="card"><h2 data-es='Ranking regional'>Regional ranking</h2>
+      <div class="wrap"><table id="tbl"></table></div>
+      <small data-es='Ordenado por calentamiento. Haz clic en una fila para abrir la región.'>Sorted by warming. Click a row to open the region.</small>
     </div>
   </div>
 
-  <div class="card"><div class="kpis" id="kpis"></div></div>
-
-  <div class="grid2">
-    <div class="card"><h2>Season temperature (°C)</h2><div class="chartbox"><canvas id="cT"></canvas></div></div>
-    <div class="card"><h2>Season rainfall (mm)</h2><div class="chartbox"><canvas id="cR"></canvas></div></div>
+  <div class="g2">
+    <div class="card"><h2 data-es='Tendencia de temperatura de la temporada (°C)'>Season temperature trend (°C)</h2><div class="cb"><canvas id="cT"></canvas></div></div>
+    <div class="card"><h2 data-es='Lluvia de la temporada por año (mm)'>Season rainfall by year (mm)</h2><div class="cb"><canvas id="cR"></canvas></div></div>
+    <div class="card"><h2 data-es='Temperatura mensual: periodo anterior vs reciente (°C)'>Monthly temperature: earlier vs recent (°C)</h2><div class="cb"><canvas id="cMT"></canvas></div></div>
+    <div class="card"><h2 data-es='Lluvia mensual: periodo anterior vs reciente (mm)'>Monthly rainfall: earlier vs recent (mm)</h2><div class="cb"><canvas id="cMR"></canvas></div></div>
+    <div class="card"><h2 data-es='Días de calor extremo por temporada'>Extremely hot days per season</h2><span data-es='Umbral (°C):'>Threshold (°C):</span> <select id="thr"><option>30</option><option selected>32</option><option>35</option></select><div class="cb"><canvas id="cH"></canvas></div><small id="hnote"></small></div>
+    <div class="card"><h2 data-es='Humedad del suelo en zona de raíces, media de la temporada (0–1)'>Root-zone soil wetness, season mean (0–1)</h2><div class="cb"><canvas id="cS"></canvas></div><small id="snote"></small></div>
   </div>
 
-  <div class="card">
-    <h2>What this means for maize growers</h2>
-    <div id="advice"></div>
-    <small>These are climate-based signals to support decisions, not a replacement for local agronomic advice.</small>
-  </div>
+  <div class="card"><h2 data-es='Qué significa para los productores de maíz'>What this means for maize growers</h2><div id="advice"></div>
+    <small data-es='Las tendencias climáticas no son pronósticos de rendimiento. Son señales para apoyar decisiones, junto con asesoría agronómica local.'>Climate trends are not yield forecasts. These are signals to support decisions, to be combined with local agronomic advice.</small></div>
 
-  <div class="card">
-    <h2>Method &amp; data</h2>
-    <p><span class="tag">NASA POWER</span> Monthly 2 m air temperature (T2M) and bias-corrected precipitation (PRECTOTCORR), community “AG”, fetched live from the NASA POWER API for the selected point.</p>
-    <p>Growing season = June–October (typical rainfed maize cycle in Jalisco). Earlier period = 1995–2009, recent period = 2010–2025. Trend = least-squares line. Rainfall = daily rate × days in month, summed over the season.</p>
-    <p><small>Limitations: one grid point per region (about 0.5° × 0.625° cells), no crop-yield data, no irrigation or soil data. Next step: add SMAP soil moisture and MODIS/Landsat vegetation (NDVI).</small></p>
+  <div class="card"><h2 data-es='Método y datos'>Method &amp; data</h2>
+    <p data-es='<b>NASA POWER</b> (comunidad “AG”): temperatura del aire a 2 m (T2M), precipitación corregida (PRECTOTCORR), humedad del suelo en zona de raíces (GWETROOT) y temperatura máxima diaria (T2M_MAX), consultadas en vivo para las coordenadas de cada región, 1995–2025.'><b>NASA POWER</b> (community “AG”): 2 m air temperature (T2M), bias-corrected precipitation (PRECTOTCORR), root-zone soil wetness (GWETROOT) and daily maximum temperature (T2M_MAX), fetched live for each region’s coordinates, 1995–2025.</p>
+    <p data-es='Temporada de cultivo = junio a octubre (ciclo típico de temporal). Periodo anterior = 1995–2009, reciente = 2010–2025. Tendencia = recta de mínimos cuadrados. Una temporada seca tiene lluvia menor al 85% del promedio 1995–2025. Lluvia = tasa diaria × días del mes. Días calurosos = días con temperatura máxima igual o mayor al umbral elegido.'>Growing season = June–October (typical rainfed cycle). Earlier period = 1995–2009, recent = 2010–2025. Trend = least-squares line. A “dry season” has rainfall below 85% of the 1995–2025 average. Rainfall = daily rate × days in month. Hot days = days with maximum temperature at or above the chosen threshold.</p>
+    <p data-es='Explorador de rotaciones: suministro de agua = 70% de la lluvia de temporada + agua útil del suelo (capacidad de agua del suelo × 0.5 m × humedad de raíces NASA) + riego (limitado = +100 mm). Año seco = lluvia del percentil 20. La presión de calor combina temperatura y calentamiento de la temporada. Los valores de cultivos y suelos son supuestos simplificados e ilustrativos (rangos típicos), para sustituirse con datos locales y asesoría agronómica; no son recomendaciones. Los puntajes se ponderan con las prioridades del agricultor.'>Rotation explorer: water supply = 70% of season rain + usable soil water (soil water capacity × 0.5 m × NASA root-zone wetness) + irrigation (limited = +100 mm). Dry year = 20th-percentile season rain. Heat pressure combines season temperature and warming. Crop and soil values are simplified, illustrative assumptions (typical ranges), meant to be replaced with local data and agronomist input; they are not recommendations. Scores are weighted by the farmer’s priorities.</p>
+    <p data-es='Las ventanas del mapa muestran el clima actual de <b>Open-Meteo</b> (no son datos de la NASA). Imágenes satelitales y nombres de lugares: Esri.'>Map popups show current conditions from <b>Open-Meteo</b> (not NASA data). Satellite imagery and place names: Esri.</p>
+    <small data-es='Limitaciones: un punto de malla por región (celdas de unos 0.5° × 0.625°), sin datos de rendimiento ni riego; la humedad del suelo proviene de un modelo. Siguientes pasos: observaciones SMAP de la NASA e índices de vegetación MODIS/Landsat.'>Limitations: one grid point per region (cells of about 0.5° × 0.625°), no yield or irrigation data; soil wetness is model-based. Next steps: NASA SMAP observations and MODIS/Landsat vegetation indices.</small>
   </div>
 </main>
-<footer style="max-width:980px;margin:auto;padding:0 20px 30px">
-  Team Space Tapatíos · 2026 NASA Space Apps Challenge · Challenge: Field Shift: Adapting Farms with NASA Data
-</footer>
+<footer data-es='Equipo Space Tapatíos · NASA Space Apps Challenge 2026 · Field Shift: Adapting Farms with NASA Data' style="max-width:1100px;margin:auto;padding:0 20px 28px">Team Space Tapatíos · 2026 NASA Space Apps Challenge · Field Shift: Adapting Farms with NASA Data</footer>
 
 <script>
-const ZONES = {
-  "Los Altos – Tepatitlán":[20.81,-102.76],
-  "Ciénega – Ocotlán":[20.35,-102.77],
-  "Valles – Ameca":[20.55,-104.05],
-  "Sur – Ciudad Guzmán":[19.70,-103.46],
-  "Norte – Lagos de Moreno":[21.36,-101.93]
-};
-const Y0=1995, Y1=2025, SPLIT=2010, MONTHS=[6,7,8,9,10];
-const sel=document.getElementById('zone'), statusEl=document.getElementById('status');
-Object.keys(ZONES).forEach(k=>sel.add(new Option(k,k)));
-let chT=null, chR=null;
-
-const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
-const sd=a=>{const m=mean(a);return Math.sqrt(mean(a.map(v=>(v-m)**2)))};
-function trend(xs,ys){const mx=mean(xs),my=mean(ys);let n=0,d=0;xs.forEach((x,i)=>{n+=(x-mx)*(ys[i]-my);d+=(x-mx)**2});const b=n/d;return {b,a:my-b*mx}}
+const ZONES=[
+ {n:"Los Altos – Tepatitlán",lat:20.81,lon:-102.76},{n:"North – Lagos de Moreno",lat:21.36,lon:-101.93},
+ {n:"Ciénega – Ocotlán",lat:20.35,lon:-102.77},{n:"Valles – Ameca",lat:20.55,lon:-104.05},
+ {n:"South – Ciudad Guzmán",lat:19.70,lon:-103.46},{n:"Center – Zapopan",lat:20.72,lon:-103.39},
+ {n:"Sierra de Amula – Autlán",lat:19.77,lon:-104.37},{n:"Far North – Colotlán",lat:22.11,lon:-103.26}];
+const Y0=1995,Y1=2025,SPLIT=2010,MS=[6,7,8,9,10],MN=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct"];
+const sum=a=>a.reduce((s,v)=>s+v,0),mean=a=>sum(a)/a.length,sd=a=>{const m=mean(a);return Math.sqrt(mean(a.map(v=>(v-m)**2)))};
 const dim=(y,m)=>new Date(y,m,0).getDate();
+function trend(x,y){const mx=mean(x),my=mean(y);let n=0,d=0;x.forEach((v,i)=>{n+=(v-mx)*(y[i]-my);d+=(v-mx)**2});const b=n/d;return{b,a:my-b*mx}}
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const sel=document.getElementById('zone'),st=document.getElementById('status');
+ZONES.forEach((z,i)=>sel.add(new Option(z.n,i)));
+let map,chs={},cur=0;
 
-async function load(){
-  const [lat,lon]=ZONES[sel.value];
-  statusEl.className='';statusEl.textContent='Loading NASA data…';
-  const url=`https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M,PRECTOTCORR&community=AG&longitude=${lon}&latitude=${lat}&start=${Y0}&end=${Y1}&format=JSON`;
-  try{
-    const r=await fetch(url); if(!r.ok) throw new Error(r.status);
-    const j=await r.json(); const P=j.properties.parameter;
-    const years=[],T=[],R=[];
-    for(let y=Y0;y<=Y1;y++){
-      const t=[],rr=[];
-      MONTHS.forEach(m=>{const k=y+String(m).padStart(2,'0');const a=P.T2M[k],b=P.PRECTOTCORR[k];
-        if(a>-900&&b>-900){t.push(a);rr.push(b*dim(y,m))}});
-      if(t.length===MONTHS.length){years.push(y);T.push(mean(t));R.push(rr.reduce((s,v)=>s+v,0))}
-    }
-    render(years,T,R); statusEl.textContent=`Data: NASA POWER · ${years[0]}–${years[years.length-1]} · ${lat}°, ${lon}°`;
-  }catch(e){
-    statusEl.className='err';
-    statusEl.textContent='Could not load NASA POWER data. Check your internet connection and reload.';
+async function fetchZone(z){
+  const u=`https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M,PRECTOTCORR&community=AG&longitude=${z.lon}&latitude=${z.lat}&start=${Y0}&end=${Y1}&format=JSON`;
+  const r=await fetch(u);if(!r.ok)throw new Error(r.status);
+  const P=(await r.json()).properties.parameter;
+  const yrs=[],T=[],R=[],mT={},mR={};MS.forEach(m=>{mT[m]=[];mR[m]=[]});
+  for(let y=Y0;y<=Y1;y++){
+    const t=[],q=[];
+    MS.forEach(m=>{const k=y+String(m).padStart(2,'0'),a=P.T2M[k],b=P.PRECTOTCORR[k];if(a>-900&&b>-900){t.push(a);q.push(b*dim(y,m))}});
+    if(t.length===MS.length){yrs.push(y);T.push(mean(t));R.push(sum(q));MS.forEach((m,i)=>{mT[m].push(t[i]);mR[m].push(q[i])})}
   }
+  const e=yrs.map((y,i)=>y<SPLIT?i:-1).filter(i=>i>=0),l=yrs.map((y,i)=>y>=SPLIT?i:-1).filter(i=>i>=0);
+  const pick=(a,ix)=>ix.map(i=>a[i]),avg=mean(R),dry=ix=>ix.filter(i=>R[i]<.85*avg).length;
+  const tE=mean(pick(T,e)),tL=mean(pick(T,l)),rE=mean(pick(R,e)),rL=mean(pick(R,l));
+  z.d={yrs,T,R,mT,mR,e,l,pick,avg};
+  z.s={tE,tL,rE,rL,dT:tL-tE,dR:(rL-rE)/rE*100,cvE:sd(pick(R,e))/rE*100,cvL:sd(pick(R,l))/rL*100,dryE:dry(e),dryL:dry(l),tr:trend(yrs,T)};
+}
+const color=dT=>dT<.3?'#4a90e2':dT<.7?'#f5c542':'#e0701b';
+
+const WX={0:['Clear sky','☀️'],1:['Mostly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],45:['Fog','🌫️'],48:['Fog','🌫️'],51:['Light drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],80:['Rain showers','🌦️'],81:['Rain showers','🌧️'],82:['Violent showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm with hail','⛈️'],99:['Thunderstorm with hail','⛈️']};
+let lang='en',lastSt=['Loading NASA data…',{}];
+const ES={'Maize monoculture':'Maíz continuo','Maize–Bean':'Maíz–Frijol','Maize–Maize–Bean':'Maíz–Maíz–Frijol','Maize–Sorghum':'Maíz–Sorgo','Maize–Bean–Sorghum':'Maíz–Frijol–Sorgo','Maize–Bean + cover crop':'Maíz–Frijol + cultivo de cobertura','Water':'Agua','Heat':'Calor','Soil':'Suelo','Income':'Ingreso','Low cost':'Bajo costo',
+'<b>Top pick:</b> {n} ({s}/100), {d} points above continuous maize.':'<b>Mejor opción:</b> {n} ({s}/100), {d} puntos sobre el maíz continuo.',
+'In a dry year ({r} mm of rain) this rotation covers {c}% of crop water needs; continuous maize covers {m}%.':'En un año seco ({r} mm de lluvia) esta rotación cubre {c}% de las necesidades de agua; el maíz continuo cubre {m}%.',
+'⚠ Water-limited in dry years: consider irrigation or lower-demand crops.':'⚠ Limitada por agua en años secos: considera riego o cultivos de menor demanda.',
+'⚠ Heat pressure is high here: heat-tolerant crops such as sorghum help.':'⚠ La presión de calor es alta aquí: ayudan cultivos tolerantes como el sorgo.',
+'Legumes such as common bean fix nitrogen, and a more diverse rotation supports soil health.':'Las leguminosas como el frijol fijan nitrógeno, y una rotación más diversa favorece la salud del suelo.',
+'NASA inputs: season rain {r} mm (dry year {p} mm), root-zone wetness {w}, warming {t} °C.':'Datos NASA: lluvia de temporada {r} mm (año seco {p} mm), humedad de raíces {w}, calentamiento {t} °C.',
+'Score 0–100, weighted by your priorities. Water shown as normal/dry year.':'Puntaje 0–100, ponderado por tus prioridades. Agua: año normal/seco.',
+'Loading NASA data…':'Cargando datos de la NASA…','Could not load NASA POWER data. Check your connection and reload.':'No se pudieron cargar los datos de NASA POWER. Revisa tu conexión y recarga.','Loaded {k} of {n} regions.':'Se cargaron {k} de {n} regiones.','Data: NASA POWER · {a}–{b} · {n} regions':'Datos: NASA POWER · {a}–{b} · {n} regiones',
+'Average season temperature (2010–2025)':'Temperatura media de la temporada (2010–2025)','Accumulated season rainfall (2010–2025)':'Lluvia acumulada de la temporada (2010–2025)','Thermal change vs 1995–2009 ({v} °C)':'Cambio térmico vs 1995–2009 ({v} °C)','Rainfall change vs 1995–2009 ({v} mm)':'Cambio de lluvia vs 1995–2009 ({v} mm)',
+'Season mean temperature':'Temperatura media de la temporada','Trend':'Tendencia','decade':'década','Season rainfall':'Lluvia de la temporada','1995–2025 average':'Promedio 1995–2025','Aug':'Ago',
+'<b>Heat:</b> the season is {x} °C warmer than in 1995–2009. Consider adjusting planting dates and choosing heat-tolerant hybrids, especially for flowering.':'<b>Calor:</b> la temporada es {x} °C más cálida que en 1995–2009. Considera ajustar fechas de siembra y elegir híbridos tolerantes al calor, sobre todo en floración.',
+'<b>Heat:</b> season warming is modest here ({x} °C), but flowering-stage heat should still be monitored.':'<b>Calor:</b> el calentamiento aquí es moderado ({x} °C), pero conviene vigilar el calor durante la floración.',
+'<b>Water variability:</b> rainfall variability is {cv}% (was {ce}%) with {dl} dry seasons recently vs {de}. Plan supplemental irrigation, mulching or conservation tillage to hold soil moisture.':'<b>Variabilidad del agua:</b> la variabilidad de lluvia es {cv}% (antes {ce}%) con {dl} temporadas secas recientes vs {de}. Planea riego de auxilio, acolchado o labranza de conservación para retener humedad.',
+'<b>Water variability:</b> variability has not increased ({cv}% vs {ce}%), but dry spells inside the season can still hurt yields.':'<b>Variabilidad del agua:</b> no ha aumentado ({cv}% vs {ce}%), pero las sequías dentro de la temporada aún pueden afectar el rendimiento.',
+'<b>Rainfall level:</b> season rain is {x}% lower than before. Favor shorter-cycle varieties and water-saving practices.':'<b>Nivel de lluvia:</b> la lluvia de la temporada es {x}% menor que antes. Conviene usar variedades de ciclo corto y prácticas de ahorro de agua.',
+'<b>Regional context:</b> this region ranks #{k} of {n} in warming.':'<b>Contexto regional:</b> esta región ocupa el lugar #{k} de {n} en calentamiento.',
+'<b>Monitoring:</b> pair these signals with soil wetness and satellite vegetation indices (NDVI) to detect stress early.':'<b>Monitoreo:</b> combina estas señales con la humedad del suelo e índices de vegetación satelitales (NDVI) para detectar estrés a tiempo.',
+'Days ≥ {t} °C':'Días ≥ {t} °C','Loading daily data…':'Cargando datos diarios…','Daily data unavailable right now.':'Datos diarios no disponibles por ahora.','Average hot days per season: {e} (1995–2009) vs {l} (2010–2025). Daily NASA POWER data (T2M_MAX), June–October.':'Promedio de días calurosos por temporada: {e} (1995–2009) vs {l} (2010–2025). Datos diarios de NASA POWER (T2M_MAX), junio a octubre.',
+'Soil wetness':'Humedad del suelo','Loading soil data…':'Cargando datos de suelo…','Soil data unavailable right now.':'Datos de suelo no disponibles por ahora.','Model-based root-zone wetness (NASA POWER / GMAO), not SMAP observations.':'Humedad de zona de raíces basada en modelo (NASA POWER / GMAO), no son observaciones SMAP.',
+'Loading current weather…':'Cargando clima actual…','NASA POWER · maize season':'NASA POWER · temporada de maíz','Temperature: {t} °C ({d} °C vs 1995–2009)':'Temperatura: {t} °C ({d} °C vs 1995–2009)','Rainfall: {r} mm ({p}%)':'Lluvia: {r} mm ({p}%)','Dry seasons: {a} vs {b}':'Temporadas secas: {a} vs {b}',
+'feels like':'sensación térmica','Humidity':'Humedad','Wind':'Viento','Rain':'Lluvia','Right now · Open-Meteo (not NASA data)':'Ahora mismo · Open-Meteo (no son datos de la NASA)','Current weather unavailable.':'Clima actual no disponible.',
+'Clear sky':'Despejado','Mostly clear':'Mayormente despejado','Partly cloudy':'Parcialmente nublado','Overcast':'Nublado','Fog':'Niebla','Light drizzle':'Llovizna ligera','Drizzle':'Llovizna','Heavy drizzle':'Llovizna fuerte','Light rain':'Lluvia ligera','Heavy rain':'Lluvia fuerte','Rain showers':'Chubascos','Violent showers':'Chubascos fuertes','Thunderstorm':'Tormenta eléctrica','Thunderstorm with hail':'Tormenta con granizo','Variable conditions':'Condiciones variables'};
+const T=(k,o={})=>((lang==='es'&&ES[k])||k).replace(/\{(\w+)\}/g,(m,n)=>o[n]!==undefined?o[n]:m);
+function setStatus(k,o,e){lastSt=[k,o,e];st.style.color=e?'#d33':'var(--mut)';st.textContent=T(k,o)}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll('[data-es]').forEach(el=>{if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;el.innerHTML=lang==='es'?el.dataset.es:el.dataset.en});document.getElementById('lang').textContent=lang==='es'?'EN':'ES';setStatus(...lastSt)}
+document.getElementById('lang').onclick=()=>{lang=lang==='es'?'en':'es';applyLang();if(ZONES[cur]&&ZONES[cur].s)show(cur)};
+
+function infoBase(z){const s=z.s,sg=v=>(v>=0?'+':'')+v;
+  return `<div style="font:13px system-ui,sans-serif;color:#10224a;line-height:1.45"><b style="font-size:15px">${z.n}</b><br><small style="color:#5b6b8c">${z.lat.toFixed(2)}°, ${z.lon.toFixed(2)}°</small>
+  <div id="wx" style="margin:8px 0">${T('Loading current weather…')}</div><hr style="border:0;border-top:1px solid #ddd">
+  <b>${T('NASA POWER · maize season')}</b><br>${T('Temperature: {t} °C ({d} °C vs 1995–2009)',{t:s.tL.toFixed(1),d:sg(s.dT.toFixed(2))})}<br>${T('Rainfall: {r} mm ({p}%)',{r:Math.round(s.rL),p:sg(s.dR.toFixed(0))})}<br>${T('Dry seasons: {a} vs {b}',{a:s.dryL,b:s.dryE})}</div>`}
+async function loadWx(z){
+  let h;
+  try{
+    if(!z.wx||Date.now()-z.wx.t>6e5){
+      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${z.lat}&longitude=${z.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&timezone=auto`);
+      z.wx={t:Date.now(),c:(await r.json()).current};
+    }
+    const c=z.wx.c,w=WX[c.weather_code]||['Variable conditions','🌡️'];
+    h=`<div style="font-size:26px;font-weight:700">${w[1]} ${Math.round(c.temperature_2m)} °C</div>${T(w[0])} · ${T('feels like')} ${Math.round(c.apparent_temperature)} °C<br>${T('Humidity')} ${c.relative_humidity_2m}% · ${T('Wind')} ${Math.round(c.wind_speed_10m)} km/h · ${T('Rain')} ${c.precipitation} mm<br><small style="color:#5b6b8c">${T('Right now · Open-Meteo (not NASA data)')}</small>`;
+  }catch(e){h=T('Current weather unavailable.')}
+  const el=document.getElementById('wx');if(el&&ZONES[cur]===z)el.innerHTML=h;
 }
 
-function render(years,T,R){
-  const idx=y=>years.map((v,i)=>v<SPLIT===y?i:-1).filter(i=>i>=0);
-  const e=idx(true), l=idx(false);
-  const tE=mean(e.map(i=>T[i])), tL=mean(l.map(i=>T[i]));
-  const rE=mean(e.map(i=>R[i])), rL=mean(l.map(i=>R[i]));
-  const cvE=sd(e.map(i=>R[i]))/rE*100, cvL=sd(l.map(i=>R[i]))/rL*100;
-  const dT=tL-tE, dR=(rL-rE)/rE*100;
-  const dry=idxs=>idxs.filter(i=>R[i]<0.85*mean(R)).length;
-  const dryE=dry(e), dryL=dry(l);
-  const tt=trend(years,T);
+/*ROT*/
+const CROPS={M:{need:550,heat:2,soil:-1,inc:3,cost:4},B:{need:350,heat:2,soil:2,inc:4,cost:2},S:{need:400,heat:5,soil:0,inc:2,cost:2}};
+const ROTS=[['Maize monoculture','MMM',0],['Maize–Bean','MB',0],['Maize–Maize–Bean','MMB',0],['Maize–Sorghum','MS',0],['Maize–Bean–Sorghum','MBS',0],['Maize–Bean + cover crop','MB',1]];
+const AWC={sand:80,loam:150,clay:170},clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
+function renderRot(z){
+  const box=document.getElementById('rres');if(!z||!z.s||!z.d)return;
+  const s=z.s,g=id=>+document.getElementById(id).value;
+  const wet=z.soil?mean(Object.keys(z.soil).filter(y=>y>=SPLIT).map(y=>z.soil[y])):0.5;
+  const awc=AWC[document.getElementById('soil').value],irr=document.getElementById('irr').value==='lim'?100:0;
+  const so=[...z.d.R].sort((a,b)=>a-b),p20=so[Math.floor(so.length*.2)];
+  const sup=r=>.7*r+awc*.5*wet+irr;
+  const press=clamp((s.tL-20)/6,0,1)*.5+clamp(s.dT,0,1)*.5;
+  const W=[g('p_w'),g('p_s'),g('p_i'),g('p_r'),g('p_c')],sw=sum(W);
+  const res=ROTS.map(([name,seq,cov])=>{
+    const cs=[...seq].map(k=>CROPS[k]),m=f=>mean(cs.map(f));
+    const wn=m(c=>Math.min(100,100*sup(s.rL)/c.need)),wd=m(c=>Math.min(100,100*sup(p20)/c.need)),ht=m(c=>100-press*(5-c.heat)*30);
+    const div=new Set(seq).size,sl=clamp(50+(m(c=>c.soil)+(div-1)*.5+(cov?1.5:0)-(div===1?1:0))*20);
+    const inc=m(c=>c.inc)/5*100,cost=100-(m(c=>c.cost)+(cov?.5:0))/5*100,risk=(wd+ht)/2;
+    const sc=[(wn+wd)/2,sl,inc,risk,cost],tot=sw?sum(sc.map((v,i)=>v*W[i]))/sw:mean(sc);
+    return {name,seq,wn,wd,ht,sl,inc,cost,tot};
+  }).sort((a,b)=>b.tot-a.tot);
+  const base=res.find(r=>r.name==='Maize monoculture'),top=res[0],R=Math.round;
+  const row=r=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><b>${T(r.name)}</b><b>${R(r.tot)}</b></div><div style="height:8px;background:var(--line);border-radius:6px"><div style="height:8px;width:${r.tot}%;background:${r===top?'var(--ok)':'var(--acc)'};border-radius:6px"></div></div><small>${T('Water')} ${R(r.wn)}/${R(r.wd)} · ${T('Heat')} ${R(r.ht)} · ${T('Soil')} ${R(r.sl)} · ${T('Income')} ${R(r.inc)} · ${T('Low cost')} ${R(r.cost)}</small></div>`;
+  const n=[T('<b>Top pick:</b> {n} ({s}/100), {d} points above continuous maize.',{n:T(top.name),s:R(top.tot),d:R(top.tot-base.tot)}),
+    T('In a dry year ({r} mm of rain) this rotation covers {c}% of crop water needs; continuous maize covers {m}%.',{r:R(p20),c:R(top.wd),m:R(base.wd)})];
+  if(top.wd<75)n.push(T('⚠ Water-limited in dry years: consider irrigation or lower-demand crops.'));
+  if(top.ht<70)n.push(T('⚠ Heat pressure is high here: heat-tolerant crops such as sorghum help.'));
+  if(top.seq.includes('B'))n.push(T('Legumes such as common bean fix nitrogen, and a more diverse rotation supports soil health.'));
+  box.innerHTML=`<small>${T('Score 0–100, weighted by your priorities. Water shown as normal/dry year.')}</small>`+res.map(row).join('')+'<ul>'+n.map(x=>`<li>${x}</li>`).join('')+'</ul><small>'+T('NASA inputs: season rain {r} mm (dry year {p} mm), root-zone wetness {w}, warming {t} °C.',{r:R(s.rL),p:R(p20),w:wet.toFixed(2),t:s.dT.toFixed(2)})+'</small>';
+}
+['soil','irr','p_w','p_s','p_i','p_r','p_c'].forEach(id=>{const e=document.getElementById(id);['input','change'].forEach(v=>e.addEventListener(v,()=>renderRot(ZONES[cur])))});
+/*ENDROT*/
 
+// ---- hot days (daily NASA POWER, loaded on demand) ----
+async function loadHot(z){
+  try{
+    const hr={};
+    const outs=await Promise.all([[1995,2004],[2005,2014],[2015,2025]].map(([a,b])=>fetch(`https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M_MAX&community=AG&longitude=${z.lon}&latitude=${z.lat}&start=${a}0101&end=${b}1231&format=JSON`).then(r=>r.json())));
+    outs.forEach(j=>{const P=j.properties.parameter.T2M_MAX;for(const k in P){const m=+k.slice(4,6);if(m<6||m>10||P[k]<-900)continue;(hr[k.slice(0,4)]=hr[k.slice(0,4)]||[]).push(P[k])}});
+    if(!Object.keys(hr).length)throw 0;z.hr=hr;
+  }catch(e){z.hfail=1}
+  if(z===ZONES[cur])drawHot(z);
+}
+function drawHot(z){
+  const note=document.getElementById('hnote');
+  if(chs.cH){chs.cH.destroy();delete chs.cH}
+  if(!z.hr){note.textContent=T(z.hfail?'Daily data unavailable right now.':'Loading daily data…');return}
+  const t=+document.getElementById('thr').value,d=z.d,c=d.yrs.map(y=>(z.hr[y]||[]).filter(v=>v>=t).length),
+    e=mean(d.e.map(i=>c[i])),l=mean(d.l.map(i=>c[i])),tr=trend(d.yrs,c);
+  chart('cH',{data:{labels:d.yrs,datasets:[{type:'bar',label:T('Days ≥ {t} °C',{t}),data:c,backgroundColor:css('--warm')},{type:'line',label:T('Trend'),data:d.yrs.map(y=>+(tr.a+tr.b*y).toFixed(2)),borderColor:css('--mut'),borderDash:[6,5],pointRadius:0}]},options:{maintainAspectRatio:false}});
+  note.textContent=T('Average hot days per season: {e} (1995–2009) vs {l} (2010–2025). Daily NASA POWER data (T2M_MAX), June–October.',{e:e.toFixed(1),l:l.toFixed(1)});
+}
+document.getElementById('thr').onchange=()=>{const z=ZONES[cur];if(z&&z.d)drawHot(z)};
+
+// ---- soil wetness (monthly NASA POWER) ----
+async function loadSoil(z){
+  try{
+    const r=await fetch(`https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=GWETROOT&community=AG&longitude=${z.lon}&latitude=${z.lat}&start=${Y0}&end=${Y1}&format=JSON`);
+    const P=(await r.json()).properties.parameter.GWETROOT,o={};
+    for(let y=Y0;y<=Y1;y++){const v=MS.map(m=>P[y+String(m).padStart(2,'0')]).filter(x=>x>-900);if(v.length===MS.length)o[y]=mean(v)}
+    if(!Object.keys(o).length)throw 0;z.soil=o;
+  }catch(e){z.sfail=1}
+  if(z===ZONES[cur]){drawSoil(z);renderRot(z)}
+}
+function drawSoil(z){
+  const note=document.getElementById('snote');
+  if(chs.cS){chs.cS.destroy();delete chs.cS}
+  if(!z.soil){note.textContent=T(z.sfail?'Soil data unavailable right now.':'Loading soil data…');return}
+  const ys=Object.keys(z.soil).map(Number),v=ys.map(y=>+z.soil[y].toFixed(3)),tr=trend(ys,v);
+  chart('cS',{type:'line',data:{labels:ys,datasets:[{label:T('Soil wetness'),data:v,borderColor:css('--ok'),backgroundColor:css('--ok'),pointRadius:3,tension:.2},{label:T('Trend'),data:ys.map(y=>+(tr.a+tr.b*y).toFixed(3)),borderColor:css('--mut'),borderDash:[6,5],pointRadius:0}]},options:{maintainAspectRatio:false}});
+  note.textContent=T('Model-based root-zone wetness (NASA POWER / GMAO), not SMAP observations.');
+}
+
+// ---- CSV ----
+function dl(n,rows){const b=new Blob(['\ufeff'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+document.getElementById('csv1').onclick=()=>{const z=ZONES[cur];if(!z||!z.d)return;const t=+document.getElementById('thr').value;
+  dl('maizeshift_'+z.n.replace(/[^A-Za-z]+/g,'_')+'.csv',[['year','season_mean_T2M_C','season_rain_mm','root_zone_soil_wetness','hot_days_ge_'+t+'C'],
+    ...z.d.yrs.map((y,i)=>[y,z.d.T[i].toFixed(2),Math.round(z.d.R[i]),z.soil&&z.soil[y]!==undefined?z.soil[y].toFixed(3):'',z.hr&&z.hr[y]?z.hr[y].filter(v=>v>=t).length:''])])};
+document.getElementById('csv2').onclick=()=>{const rows=[['region','year','season_mean_T2M_C','season_rain_mm']];
+  ZONES.filter(z=>z.d).forEach(z=>z.d.yrs.forEach((y,i)=>rows.push([z.n.replace(/,/g,' '),y,z.d.T[i].toFixed(2),Math.round(z.d.R[i])])));dl('maizeshift_all_regions.csv',rows)};
+
+async function init(){
+  map=L.map('map').setView([20.6,-103.0],7);
+  const E='https://server.arcgisonline.com/ArcGIS/rest/services/';
+  const sat=L.tileLayer(E+'World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'});
+  const topo=L.tileLayer(E+'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,attribution:'Tiles © Esri, USGS, NOAA'});
+  const lab=L.tileLayer(E+'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:13});
+  sat.addTo(map);lab.addTo(map);
+  L.control.layers({'Satellite':sat,'Topographic':topo},{'Place names':lab}).addTo(map);
+  const res=await Promise.allSettled(ZONES.map(fetchZone));
+  const ok=ZONES.filter(z=>z.s);
+  if(!ok.length){setStatus('Could not load NASA POWER data. Check your connection and reload.',{},1);return}
+  if(ok.length<ZONES.length)setStatus('Loaded {k} of {n} regions.',{k:ok.length,n:ZONES.length});
+  else setStatus('Data: NASA POWER · {a}–{b} · {n} regions',{a:Y0,b:Y1,n:ZONES.length});
+  ZONES.forEach((z,i)=>{if(!z.s)return;
+    z.m=L.circleMarker([z.lat,z.lon],{radius:13,color:'#fff',weight:2,fillColor:color(z.s.dT),fillOpacity:.9}).addTo(map)
+      .bindTooltip(`${z.n}: ${z.s.dT>=0?'+':''}${z.s.dT.toFixed(2)} °C`).bindPopup('',{minWidth:240}).on('click',()=>show(i));});
+  const rows=ZONES.map((z,i)=>({z,i})).filter(o=>o.z.s).sort((a,b)=>b.z.s.dT-a.z.s.dT);
+  document.getElementById('tbl').innerHTML='<tr><th data-es="Región">Region</th><th data-es="ΔTemp">ΔTemp</th><th data-es="ΔLluvia">ΔRain</th><th data-es="Temporadas secas">Dry seasons</th></tr>'+
+    rows.map(({z,i})=>`<tr class="r" data-i="${i}"><td>${z.n}</td><td>${z.s.dT>=0?'+':''}${z.s.dT.toFixed(2)} °C</td><td>${z.s.dR>=0?'+':''}${z.s.dR.toFixed(0)}%</td><td>${z.s.dryL} vs ${z.s.dryE}</td></tr>`).join('');
+  document.querySelectorAll('tr.r').forEach(tr=>tr.onclick=()=>show(+tr.dataset.i));
+  applyLang();show(ZONES.findIndex(z=>z.s));
+}
+sel.onchange=()=>show(+sel.value);
+
+function chart(id,cfg){if(chs[id])chs[id].destroy();chs[id]=new Chart(document.getElementById(id),cfg)}
+function show(i){
+  cur=i;sel.value=i;const z=ZONES[i],s=z.s,d=z.d;if(!s)return;
+  ZONES.forEach((q,j)=>q.m&&q.m.setStyle({weight:j===i?5:2,color:j===i?'#00e5ff':'#fff',radius:j===i?16:13}));
+  map.panTo([z.lat,z.lon]);z.m.setPopupContent(infoBase(z));z.m.openPopup();loadWx(z);
+  document.querySelectorAll('tr.r').forEach(tr=>tr.classList.toggle('sel',+tr.dataset.i===i));
+  const sg=v=>(v>=0?'+':'')+v;
   document.getElementById('kpis').innerHTML=[
-    [(dT>=0?'+':'')+dT.toFixed(2)+' °C','Season temperature, recent vs earlier period'],
-    [(dR>=0?'+':'')+dR.toFixed(0)+' %','Season rainfall, recent vs earlier period'],
-    [dryL+' vs '+dryE,'Dry seasons (&lt;85% of average): recent vs earlier'],
-    [(tt.b*10>=0?'+':'')+(tt.b*10).toFixed(2)+' °C','Warming trend per decade']
-  ].map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join('');
+   ['',s.tL.toFixed(1)+' °C',T('Average season temperature (2010–2025)')],
+   ['g',Math.round(s.rL)+' mm',T('Accumulated season rainfall (2010–2025)')],
+   ['w',sg(s.dT.toFixed(2))+' °C',T('Thermal change vs 1995–2009 ({v} °C)',{v:s.tE.toFixed(1)})],
+   ['w',sg(s.dR.toFixed(0))+' %',T('Rainfall change vs 1995–2009 ({v} mm)',{v:Math.round(s.rE)})]
+  ].map(([c,v,l])=>`<div class="kpi ${c}"><b>${v}</b><span>${l}</span></div>`).join('');
+  const warm=css('--warm'),acc=css('--acc'),mut=css('--mut'),ok=css('--ok');
+  chart('cT',{type:'line',data:{labels:d.yrs,datasets:[
+    {label:T('Season mean temperature'),data:d.T.map(v=>+v.toFixed(2)),borderColor:warm,backgroundColor:warm,pointRadius:3,tension:.2},
+    {label:T('Trend')+' ('+sg((s.tr.b*10).toFixed(2))+' °C/'+T('decade')+')',data:d.yrs.map(y=>+(s.tr.a+s.tr.b*y).toFixed(2)),borderColor:mut,borderDash:[6,5],pointRadius:0}]},
+    options:{maintainAspectRatio:false}});
+  chart('cR',{data:{labels:d.yrs,datasets:[
+    {type:'bar',label:T('Season rainfall'),data:d.R.map(Math.round),backgroundColor:d.R.map(v=>v<.85*d.avg?warm:acc)},
+    {type:'line',label:T('1995–2025 average'),data:d.yrs.map(()=>Math.round(d.avg)),borderColor:mut,borderDash:[6,5],pointRadius:0}]},
+    options:{maintainAspectRatio:false}});
+  const mm=(o,ix)=>MS.map(m=>+mean(d.pick(o[m],ix)).toFixed(1));
+  const grp=(o,u)=>({type:'bar',data:{labels:MS.map(m=>T(MN[m])),datasets:[
+    {label:'1995–2009',data:mm(o,d.e),backgroundColor:mut},{label:'2010–2025',data:mm(o,d.l),backgroundColor:u}]},options:{maintainAspectRatio:false}});
+  chart('cMT',grp(d.mT,warm));chart('cMR',grp(d.mR,acc));
 
-  const col=getComputedStyle(document.documentElement);
-  const warm=col.getPropertyValue('--warm').trim(), acc=col.getPropertyValue('--acc').trim(), mut=col.getPropertyValue('--mut').trim();
-  if(chT)chT.destroy(); if(chR)chR.destroy();
-  chT=new Chart(document.getElementById('cT'),{type:'line',data:{labels:years,datasets:[
-    {label:'Season mean temperature',data:T.map(v=>+v.toFixed(2)),borderColor:warm,backgroundColor:warm,pointRadius:3,tension:.2},
-    {label:'Trend',data:years.map(y=>+(tt.a+tt.b*y).toFixed(2)),borderColor:mut,borderDash:[6,5],pointRadius:0}]},
-    options:{maintainAspectRatio:false,scales:{y:{title:{display:true,text:'°C'}}}}});
-  const avg=mean(R);
-  chR=new Chart(document.getElementById('cR'),{data:{labels:years,datasets:[
-    {type:'bar',label:'Season rainfall',data:R.map(v=>Math.round(v)),backgroundColor:acc},
-    {type:'line',label:'Long-term average',data:years.map(()=>Math.round(avg)),borderColor:mut,borderDash:[6,5],pointRadius:0}]},
-    options:{maintainAspectRatio:false,scales:{y:{title:{display:true,text:'mm'}}}}});
-
-  const a=[];
-  if(dT>=0.3) a.push(`<b>Heat:</b> the season is ${dT.toFixed(1)} °C warmer than in 1995–2009. Consider adjusting planting dates and choosing heat-tolerant hybrids, especially for the flowering stage.`);
-  else a.push(`<b>Heat:</b> season warming is modest here (${dT.toFixed(1)} °C), but keep monitoring flowering-stage heat.`);
-  if(cvL>cvE||dryL>dryE) a.push(`<b>Water variability:</b> rainfall is ${cvL>cvE?'more':'similarly'} variable (${cvL.toFixed(0)}% vs ${cvE.toFixed(0)}%) and dry seasons are ${dryL>dryE?'more':'not more'} frequent. Plan for supplemental irrigation, mulching or conservation tillage to hold soil moisture.`);
-  else a.push(`<b>Water variability:</b> season rainfall variability has not increased (${cvL.toFixed(0)}% vs ${cvE.toFixed(0)}%), but dry spells inside the season can still hurt yields.`);
-  if(dR<=-5) a.push(`<b>Rainfall level:</b> season rain is ${Math.abs(dR).toFixed(0)}% lower than before. Prefer shorter-cycle varieties and water-saving practices.`);
-  a.push(`<b>Monitoring:</b> combine this climate view with satellite soil moisture (NASA SMAP) and vegetation indices to catch stress early.`);
+  const a=[],f=x=>x.toFixed(1),rk=ZONES.filter(q=>q.s).sort((x,y)=>y.s.dT-x.s.dT).findIndex(q=>q===z)+1;
+  a.push(s.dT>=.3?T('<b>Heat:</b> the season is {x} °C warmer than in 1995–2009. Consider adjusting planting dates and choosing heat-tolerant hybrids, especially for flowering.',{x:f(s.dT)}):T('<b>Heat:</b> season warming is modest here ({x} °C), but flowering-stage heat should still be monitored.',{x:f(s.dT)}));
+  a.push(s.cvL>s.cvE||s.dryL>s.dryE?T('<b>Water variability:</b> rainfall variability is {cv}% (was {ce}%) with {dl} dry seasons recently vs {de}. Plan supplemental irrigation, mulching or conservation tillage to hold soil moisture.',{cv:s.cvL.toFixed(0),ce:s.cvE.toFixed(0),dl:s.dryL,de:s.dryE}):T('<b>Water variability:</b> variability has not increased ({cv}% vs {ce}%), but dry spells inside the season can still hurt yields.',{cv:s.cvL.toFixed(0),ce:s.cvE.toFixed(0)}));
+  if(s.dR<=-5)a.push(T('<b>Rainfall level:</b> season rain is {x}% lower than before. Favor shorter-cycle varieties and water-saving practices.',{x:Math.abs(s.dR).toFixed(0)}));
+  a.push(T('<b>Regional context:</b> this region ranks #{k} of {n} in warming.',{k:rk,n:ZONES.filter(q=>q.s).length}));
+  a.push(T('<b>Monitoring:</b> pair these signals with soil wetness and satellite vegetation indices (NDVI) to detect stress early.'));
   document.getElementById('advice').innerHTML='<ul>'+a.map(x=>`<li>${x}</li>`).join('')+'</ul>';
+  renderRot(z);z.hr?drawHot(z):(drawHot(z),loadHot(z));z.soil||z.sfail?drawSoil(z):(drawSoil(z),loadSoil(z));
 }
-sel.addEventListener('change',load);
-load();
+init();
 </script>
 </body>
 </html>
