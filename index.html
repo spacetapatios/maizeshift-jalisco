@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MaizeShift Jalisco – Climate-Smart Crop Rotation Explorer</title>
+<title>MaizeShift México – Climate-Smart Crop Rotation Explorer</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -30,15 +30,15 @@ select{font:inherit;padding:8px 12px;border-radius:10px;border:1px solid var(--l
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
 tr.r{cursor:pointer}tr.r:hover,tr.sel{background:rgba(31,111,235,.12)}
-.wrap{overflow-x:auto}
+.wrap{overflow-x:auto;max-height:470px;overflow-y:auto}
 .leg span{display:inline-block;width:12px;height:12px;border-radius:50%;margin:0 4px 0 12px;vertical-align:middle}
 li{margin:6px 0}input[type=range]{width:100%}#rot label span{display:block;font-size:13px;margin-top:8px}.btn{font:inherit;font-size:13px;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}.btn:hover{border-color:var(--acc)}small,footer{color:var(--mut);font-size:13px}.err{color:#d33}
 </style>
 </head>
 <body>
 <div class="top"><div>
-  <h1>🌽 MaizeShift Jalisco</h1>
-  <p data-es='Herramienta de apoyo a decisiones para explorar rotaciones de cultivos en Jalisco: datos climáticos y de humedad del suelo de la NASA, características de suelo y cultivos, y las prioridades del agricultor.'>A decision-support tool to explore crop rotations in Jalisco: NASA climate and soil-wetness data, soil and crop characteristics, and the farmer’s priorities.</p>
+  <h1>🌽 MaizeShift México</h1>
+  <p data-es='Herramienta de apoyo a decisiones para explorar rotaciones de cultivos en México: datos climáticos y de humedad del suelo de la NASA, características de suelo y cultivos, y las prioridades del agricultor.'>A decision-support tool to explore crop rotations across Mexico: NASA climate and soil-wetness data, soil and crop characteristics, and the farmer’s priorities.</p>
 </div></div>
 <main>
   <div class="card" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
@@ -94,10 +94,10 @@ li{margin:6px 0}input[type=range]{width:100%}#rot label span{display:block;font-
 
 <script>
 const ZONES=[
- {n:"Los Altos – Tepatitlán",lat:20.81,lon:-102.76},{n:"North – Lagos de Moreno",lat:21.36,lon:-101.93},
- {n:"Ciénega – Ocotlán",lat:20.35,lon:-102.77},{n:"Valles – Ameca",lat:20.55,lon:-104.05},
- {n:"South – Ciudad Guzmán",lat:19.70,lon:-103.46},{n:"Center – Zapopan",lat:20.72,lon:-103.39},
- {n:"Sierra de Amula – Autlán",lat:19.77,lon:-104.37},{n:"Far North – Colotlán",lat:22.11,lon:-103.26}];
+ {n:"Jalisco · Los Altos – Tepatitlán",lat:20.81,lon:-102.76},{n:"Jalisco · North – Lagos de Moreno",lat:21.36,lon:-101.93},
+ {n:"Jalisco · Ciénega – Ocotlán",lat:20.35,lon:-102.77},{n:"Jalisco · Valles – Ameca",lat:20.55,lon:-104.05},
+ {n:"Jalisco · South – Ciudad Guzmán",lat:19.70,lon:-103.46},{n:"Jalisco · Center – Zapopan",lat:20.72,lon:-103.39},
+ {n:"Jalisco · Sierra de Amula – Autlán",lat:19.77,lon:-104.37},{n:"Jalisco · Far North – Colotlán",lat:22.11,lon:-103.26},{n:"Aguascalientes",lat:21.88,lon:-102.3},{n:"Baja California · Mexicali",lat:32.66,lon:-115.47},{n:"Baja California Sur · Ciudad Constitución",lat:25.03,lon:-111.67},{n:"Campeche · Hopelchén",lat:19.75,lon:-89.85},{n:"Chiapas · Villaflores",lat:16.23,lon:-93.27},{n:"Chihuahua · Cuauhtémoc",lat:28.41,lon:-106.87},{n:"Coahuila · Torreón",lat:25.54,lon:-103.41},{n:"Colima",lat:19.24,lon:-103.72},{n:"Durango · Guadalupe Victoria",lat:24.45,lon:-104.11},{n:"Estado de México · Toluca",lat:19.29,lon:-99.65},{n:"Guanajuato · Celaya",lat:20.52,lon:-100.81},{n:"Guerrero · Iguala",lat:18.35,lon:-99.54},{n:"Hidalgo · Tulancingo",lat:20.08,lon:-98.37},{n:"Michoacán · Zamora",lat:19.99,lon:-102.28},{n:"Morelos · Cuautla",lat:18.81,lon:-98.95},{n:"Nayarit · Tepic",lat:21.5,lon:-104.89},{n:"Nuevo León · Linares",lat:24.86,lon:-99.57},{n:"Oaxaca · Valles Centrales",lat:17.06,lon:-96.72},{n:"Puebla · Tecamachalco",lat:18.88,lon:-97.73},{n:"Querétaro · San Juan del Río",lat:20.39,lon:-99.99},{n:"Quintana Roo · Felipe Carrillo Puerto",lat:19.58,lon:-88.05},{n:"San Luis Potosí · Rioverde",lat:21.93,lon:-99.99},{n:"Sinaloa · Culiacán",lat:24.8,lon:-107.39},{n:"Sonora · Ciudad Obregón",lat:27.49,lon:-109.94},{n:"Tabasco · Villahermosa",lat:17.99,lon:-92.93},{n:"Tamaulipas · Río Bravo",lat:25.6,lon:-98.1},{n:"Tlaxcala · Huamantla",lat:19.31,lon:-97.92},{n:"Veracruz · Cosamaloapan",lat:18.37,lon:-95.8},{n:"Yucatán · Tizimín",lat:21.14,lon:-88.15},{n:"Zacatecas · Fresnillo",lat:23.17,lon:-102.87}];
 const Y0=1995,Y1=2025,SPLIT=2010,MS=[6,7,8,9,10],MN=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct"];
 const sum=a=>a.reduce((s,v)=>s+v,0),mean=a=>sum(a)/a.length,sd=a=>{const m=mean(a);return Math.sqrt(mean(a.map(v=>(v-m)**2)))};
 const dim=(y,m)=>new Date(y,m,0).getDate();
@@ -254,20 +254,20 @@ document.getElementById('csv2').onclick=()=>{const rows=[['region','year','seaso
   ZONES.filter(z=>z.d).forEach(z=>z.d.yrs.forEach((y,i)=>rows.push([z.n.replace(/,/g,' '),y,z.d.T[i].toFixed(2),Math.round(z.d.R[i])])));dl('maizeshift_all_regions.csv',rows)};
 
 async function init(){
-  map=L.map('map').setView([20.6,-103.0],7);
+  map=L.map('map').setView([23.6,-102.5],5);
   const E='https://server.arcgisonline.com/ArcGIS/rest/services/';
   const sat=L.tileLayer(E+'World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'});
   const topo=L.tileLayer(E+'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:13,attribution:'Tiles © Esri, USGS, NOAA'});
   const lab=L.tileLayer(E+'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:13});
   sat.addTo(map);lab.addTo(map);
   L.control.layers({'Satellite':sat,'Topographic':topo},{'Place names':lab}).addTo(map);
-  const res=await Promise.allSettled(ZONES.map(fetchZone));
+  let qi=0;await Promise.all(Array.from({length:5},async()=>{while(qi<ZONES.length){const z=ZONES[qi++];try{await fetchZone(z)}catch(e){}}}));
   const ok=ZONES.filter(z=>z.s);
   if(!ok.length){setStatus('Could not load NASA POWER data. Check your connection and reload.',{},1);return}
   if(ok.length<ZONES.length)setStatus('Loaded {k} of {n} regions.',{k:ok.length,n:ZONES.length});
   else setStatus('Data: NASA POWER · {a}–{b} · {n} regions',{a:Y0,b:Y1,n:ZONES.length});
   ZONES.forEach((z,i)=>{if(!z.s)return;
-    z.m=L.circleMarker([z.lat,z.lon],{radius:13,color:'#fff',weight:2,fillColor:color(z.s.dT),fillOpacity:.9}).addTo(map)
+    z.m=L.circleMarker([z.lat,z.lon],{radius:8,color:'#fff',weight:2,fillColor:color(z.s.dT),fillOpacity:.9,bubblingMouseEvents:false}).addTo(map)
       .bindTooltip(`${z.n}: ${z.s.dT>=0?'+':''}${z.s.dT.toFixed(2)} °C`).bindPopup('',{minWidth:240}).on('click',()=>show(i));});
   const rows=ZONES.map((z,i)=>({z,i})).filter(o=>o.z.s).sort((a,b)=>b.z.s.dT-a.z.s.dT);
   document.getElementById('tbl').innerHTML='<tr><th data-es="Región">Region</th><th data-es="ΔTemp">ΔTemp</th><th data-es="ΔLluvia">ΔRain</th><th data-es="Temporadas secas">Dry seasons</th></tr>'+
@@ -280,7 +280,7 @@ sel.onchange=()=>show(+sel.value);
 function chart(id,cfg){if(chs[id])chs[id].destroy();chs[id]=new Chart(document.getElementById(id),cfg)}
 function show(i){
   cur=i;sel.value=i;const z=ZONES[i],s=z.s,d=z.d;if(!s)return;
-  ZONES.forEach((q,j)=>q.m&&q.m.setStyle({weight:j===i?5:2,color:j===i?'#00e5ff':'#fff',radius:j===i?16:13}));
+  ZONES.forEach((q,j)=>q.m&&q.m.setStyle({weight:j===i?5:2,color:j===i?'#00e5ff':'#fff',radius:j===i?12:8}));
   map.panTo([z.lat,z.lon]);z.m.setPopupContent(infoBase(z));z.m.openPopup();loadWx(z);
   document.querySelectorAll('tr.r').forEach(tr=>tr.classList.toggle('sel',+tr.dataset.i===i));
   const sg=v=>(v>=0?'+':'')+v;
@@ -314,6 +314,146 @@ function show(i){
   renderRot(z);z.hr?drawHot(z):(drawHot(z),loadHot(z));z.soil||z.sfail?drawSoil(z):(drawSoil(z),loadSoil(z));
 }
 init();
+</script>
+<script>
+/* MaizeShift extras */
+(()=>{
+const $=id=>document.getElementById(id),L=(a,b)=>lang==='es'?b:a,SC={r:0,t:0},NY=2024;
+const B=(tag,en,es,at='')=>`<${tag} ${at} data-es="${es}">${en}</${tag}>`;
+const TX={
+'Maize monoculture':['Familiar management and machinery; no new market or know-how needed.','Manejo y maquinaria conocidos; no requiere nuevo mercado ni conocimientos.','Pest and disease build-up, nutrient mining, little residue diversity; highest exposure to a dry or hot season.','Acumulación de plagas y enfermedades, extracción de nutrientes, poca diversidad de residuos; mayor exposición a temporadas secas o calurosas.'],
+'Maize–Bean':['Bean fixes nitrogen (less fertilizer), breaks pest and disease cycles and adds a food or cash crop.','El frijol fija nitrógeno (menos fertilizante), interrumpe ciclos de plagas y enfermedades y aporta alimento o ingreso.','Bean is sensitive to heat at flowering and to excess rain (root rot); local variety and market must be checked.','El frijol es sensible al calor en floración y al exceso de lluvia (pudrición); hay que revisar variedad y mercado locales.'],
+'Maize–Maize–Bean':['Keeps mostly maize income while adding one legume year to restore nitrogen.','Mantiene el ingreso del maíz y añade un año de leguminosa para restituir nitrógeno.','Only one legume year in three: smaller soil benefit; maize years remain exposed to dry spells.','Solo un año de leguminosa de cada tres: menor beneficio al suelo; los años de maíz siguen expuestos a sequías.'],
+'Maize–Sorghum':['Sorghum tolerates heat and drought, needs less water and its deep roots help infiltration.','El sorgo tolera calor y sequía, necesita menos agua y sus raíces profundas ayudan a la infiltración.','Lower income; a local market for sorghum (grain or forage) must be confirmed; no nitrogen fixation.','Menor ingreso; hay que confirmar mercado local para sorgo (grano o forraje); no fija nitrógeno.'],
+'Maize–Bean–Sorghum':['Three-crop diversity: legume nitrogen, heat-tolerant sorghum and strong pest-cycle disruption.','Diversidad de tres cultivos: nitrógeno de leguminosa, sorgo tolerante al calor y fuerte ruptura de ciclos de plagas.','More complex planning, machinery and labor; each crop needs its own market and calendar.','Planeación, maquinaria y mano de obra más complejas; cada cultivo requiere su mercado y calendario.'],
+'Maize–Bean + cover crop':['Covers soil in bare periods, reduces erosion and runoff and builds organic matter.','Cubre el suelo en periodos desnudos, reduce erosión y escurrimiento y aumenta materia orgánica.','Cover crop may compete for water in dry years and adds seed and termination costs; timing must be validated locally.','El cultivo de cobertura puede competir por agua en años secos y añade costos de semilla y terminación; el momento debe validarse localmente.']};
+
+// ---------- static sections ----------
+const main=document.querySelector('main');
+main.insertAdjacentHTML('afterbegin',`<div class="card" style="border-left:5px solid var(--warm)">${B('b','This tool supports decisions; it does not replace the farmer or local agronomic expertise. Results are patterns and possibilities, not recommendations.','Esta herramienta apoya decisiones; no reemplaza al agricultor ni a la asesoría agronómica local. Los resultados son patrones y posibilidades, no recomendaciones.')}</div>`);
+const cn=(id,h)=>`<div class="cb"><canvas id="${id}"></canvas></div>`;
+$('rot').insertAdjacentHTML('afterend',
+`<div class="card" id="scen">${B('h2','Scenarios: what if conditions change?','Escenarios: ¿y si cambian las condiciones?')}
+<div class="g2"><label><span id="lr"></span><input type="range" id="s_r" min="-30" max="30" step="5" value="0"></label><label><span id="lt"></span><input type="range" id="s_t" min="0" max="3" step="0.5" value="0"></label></div>
+${B('small','Sliders modify NASA POWER season rainfall and temperature before the rotation scores are computed. Use them to see whether the ranking is robust.','Los controles modifican la lluvia y temperatura de temporada de NASA POWER antes de calcular los puntajes. Úsalos para ver si el ranking es robusto.')}</div>
+<div class="card" id="rcmp">${B('h2','Rotation strategies compared','Comparación de estrategias de rotación')}
+<label><b data-es="Tu rotación actual:">Your current rotation:</b> <select id="curRot">${ROTS.map(r=>`<option value="${r[0]}">${r[0]}</option>`).join('')}</select></label>
+<div id="rdet" class="g2" style="margin-top:12px"></div></div>`);
+const mth=[...document.querySelectorAll('main > .card')].pop();
+mth.insertAdjacentHTML('beforebegin',
+`<div class="g2"><div class="card">${B('h2','Vegetation cover and bare-soil periods (MODIS NDVI)','Cobertura vegetal y periodos de suelo desnudo (NDVI MODIS)')}${cn('cN')}<small id="ndn"></small></div>
+<div class="card">${B('h2','Rainfall cross-check: NASA POWER vs independent source (season mm)','Verificación de lluvia: NASA POWER vs fuente independiente (mm de temporada)')}${cn('cI')}<small id="imn"></small></div></div>
+<div class="card">${B('h2','Terrain and erosion risk (SRTM)','Terreno y riesgo de erosión (SRTM)')}<div id="trn"></div></div>
+<div class="card">${B('h2','Glossary: what these terms mean','Glosario: qué significan estos términos')}
+${[['Evapotranspiration (ET)','Water that leaves the field through the soil surface and through plant leaves. High ET with low rain means water stress.','Evapotranspiración (ET)','Agua que sale del campo por el suelo y por las hojas de las plantas. ET alta con poca lluvia significa estrés hídrico.'],
+['NDVI','Index of vegetation greenness from satellite (about 0 = bare soil, 0.8 = dense healthy crop). Drops show bare fields or stress.','NDVI','Índice de verdor de la vegetación desde satélite (cerca de 0 = suelo desnudo, 0.8 = cultivo denso y sano). Las caídas muestran campos desnudos o estrés.'],
+['Root-zone soil wetness / anomaly','Fraction of water available to roots (0 dry–1 saturated). An anomaly is the difference from the long-term normal for that time of year.','Humedad de zona de raíces / anomalía','Fracción de agua disponible para las raíces (0 seco–1 saturado). Una anomalía es la diferencia frente a lo normal de esa época.'],
+['Frost risk','Chance of temperatures near 0 °C that damage crops. Low in most Mexican farmland but possible in high areas and the north in winter.','Riesgo de heladas','Probabilidad de temperaturas cercanas a 0 °C que dañan cultivos. Bajo en casi toda la zona agrícola de México, pero posible en zonas altas y en el norte en invierno.'],
+['Water balance','Water in (rain, irrigation, stored soil water) minus water out (crop use and evaporation). This tool compares supply with each crop need.','Balance hídrico','Agua que entra (lluvia, riego, agua del suelo) menos agua que sale (uso del cultivo y evaporación). Esta herramienta compara el suministro con la necesidad de cada cultivo.'],
+['Satellite vs ground data','Satellites cover large areas continuously but are coarse and indirect; ground sensors and field notes are precise but sparse. Combining both is best.','Datos satelitales vs de campo','Los satélites cubren grandes áreas de forma continua pero son gruesos e indirectos; los sensores y notas de campo son precisos pero escasos. Combinarlos es lo mejor.'],
+['Crop roles in rotation','Nitrogen-fixing legumes (bean) feed the next crop; cover crops protect and feed soil; deep-rooted crops (sorghum) open the soil and reach deeper water; drought-tolerant crops reduce risk in dry years.','Funciones de los cultivos en la rotación','Las leguminosas fijadoras de nitrógeno (frijol) alimentan al siguiente cultivo; las coberturas protegen y nutren el suelo; los cultivos de raíz profunda (sorgo) abren el suelo y alcanzan agua profunda; los tolerantes a sequía reducen riesgo en años secos.']]
+.map(g=>`<details style="margin:6px 0"><summary data-es="${g[2]}"><b>${g[0]}</b></summary>${B('p',g[1],g[3])}</details>`).join('')}</div>
+<div class="card">${B('h2','Uncertainty and where local expertise is needed','Incertidumbre y dónde se necesita experiencia local')}<ul>${[
+['Crop and soil parameters are typical ranges, not measurements of your field: validate with a local agronomist.','Los parámetros de cultivos y suelos son rangos típicos, no mediciones de tu campo: valídalos con un agrónomo local.'],
+['Each region uses one grid cell (about 50 km): microclimates, slope and soil can differ a lot inside it.','Cada región usa una celda (unos 50 km): microclimas, pendiente y suelo pueden variar mucho dentro de ella.'],
+['Scores are relative comparisons; the scenario sliders show how much the ranking depends on rainfall and temperature.','Los puntajes son comparaciones relativas; los controles de escenario muestran cuánto depende el ranking de la lluvia y la temperatura.'],
+['Market access, seed availability, pests, labor and farmer experience are not modeled and must be judged locally.','Acceso a mercado, semilla, plagas, mano de obra y experiencia del agricultor no se modelan y deben juzgarse localmente.']].map(x=>B('li',x[0],x[1])).join('')}</ul></div>`);
+
+// ---------- scenario wrapper ----------
+const orig=renderRot;
+function lab(){$('lr').textContent=L('Rainfall change','Cambio de lluvia')+': '+(SC.r>0?'+':'')+SC.r+' %';$('lt').textContent=L('Extra warming','Calentamiento adicional')+': +'+SC.t+' °C';[...$('curRot').options].forEach(o=>o.textContent=T(o.value))}
+renderRot=function(z){
+  if(!z||!z.s||!z.d)return orig(z);
+  const s=z.s,d=z.d,bk={rL:s.rL,tL:s.tL,dT:s.dT,R:d.R},k=1+SC.r/100;
+  s.rL*=k;s.tL+=SC.t;s.dT+=SC.t;d.R=d.R.map(v=>v*k);
+  try{orig(z)}finally{s.rL=bk.rL;s.tL=bk.tL;s.dT=bk.dT;d.R=bk.R}
+  lab();detail(z);drawNd(z);drawIm(z);drawTerr(z);
+  if(!z.xl){z.xl=1;loadNd(z);loadIm(z);loadTerr(z)}
+};
+['s_r','s_t'].forEach(id=>$(id).addEventListener('input',()=>{SC.r=+$('s_r').value;SC.t=+$('s_t').value;renderRot(ZONES[cur])}));
+$('curRot').addEventListener('change',()=>detail(ZONES[cur]));
+
+// ---------- rotation detail cards ----------
+function detail(z){
+  const box=$('rdet');if(!box||!z||!z.s)return;
+  const rows=[...document.querySelectorAll('#rres > div')].map(d=>{const b=d.querySelectorAll('b'),n=d.querySelector('small').textContent.match(/\d+/g).map(Number),nm=b[0].textContent,r=ROTS.find(x=>x[0]===nm||T(x[0])===nm);
+    return r?{k:r[0],sc:+b[1].textContent,wn:n[0],wd:n[1],ht:n[2],sl:n[3],inc:n[4],cost:n[5]}:null}).filter(Boolean);
+  const cu=$('curRot').value,base=rows.find(r=>r.k===cu);if(!base)return;
+  const oth=rows.filter(r=>r.k!==cu),pick=[base,oth[0],oth[1]].filter(Boolean),k=1+SC.r/100;
+  const tag=[L('Current rotation','Rotación actual'),L('Top alternative','Mejor alternativa'),L('Second alternative','Segunda alternativa')];
+  const steep=z.terr&&z.terr.slope>=8;
+  box.innerHTML=pick.map((r,i)=>{const x=TX[r.k];
+    const why=i===0?L('Baseline for comparison: what the farm does today.','Línea base de comparación: lo que se hace hoy en la finca.')
+      :L(`Dry-year water coverage ${r.wd}% vs ${base.wd}% today; soil score ${r.sl} vs ${base.sl}; income ${r.inc} vs ${base.inc}; input-cost score ${r.cost} vs ${base.cost}.`,`Cobertura de agua en año seco ${r.wd}% vs ${base.wd}% hoy; suelo ${r.sl} vs ${base.sl}; ingreso ${r.inc} vs ${base.inc}; costo de insumos ${r.cost} vs ${base.cost}.`);
+    const ev=L(`NASA POWER: season rain ${Math.round(z.s.rL*k)} mm, warming ${(z.s.dT+SC.t).toFixed(2)} °C. Water coverage normal/dry year ${r.wn}/${r.wd}%, heat resilience ${r.ht}.`,`NASA POWER: lluvia de temporada ${Math.round(z.s.rL*k)} mm, calentamiento ${(z.s.dT+SC.t).toFixed(2)} °C. Cobertura de agua año normal/seco ${r.wn}/${r.wd}%, resiliencia al calor ${r.ht}.`);
+    const gap=L('No yield, market price, pest or local soil data; one grid cell per region; soil wetness is model-based.','Sin datos de rendimiento, precios, plagas ni suelo local; una celda por región; la humedad del suelo es de modelo.');
+    const rk=L(x[2],x[3])+(steep&&r.sl<70?L(' Slope is steep here: erosion control is needed.',' La pendiente es fuerte aquí: se necesita control de erosión.'):'');
+    const li=(h,t)=>`<p style="margin:6px 0"><b>${h}</b><br>${t}</p>`;
+    return `<div style="border:1px solid var(--line);border-radius:12px;padding:12px;${i===0?'border-left:5px solid var(--warm)':''}"><small>${tag[i]} · ${Math.round(r.sc)}/100</small><h3 style="margin:2px 0 6px;font-size:16px">${T(r.k)}</h3>`
+      +li(L('Why suggested','Por qué se sugiere'),why)+li(L('Evidence','Evidencia'),ev)+li(L('Benefits','Beneficios'),L(x[0],x[1]))+li(L('Information gaps','Vacíos de información'),gap)+li(L('Risks for local review','Riesgos a revisar localmente'),rk)+'</div>'}).join('');
+}
+
+// ---------- MODIS NDVI (ORNL DAAC MODIS web service) ----------
+function drawNd(z){const n=$('ndn');if(chs.cN){chs.cN.destroy();delete chs.cN}
+  if(!z.nd){n.textContent=L(z.nf?'MODIS NDVI values unavailable right now.':'Loading MODIS NDVI…',z.nf?'Valores NDVI MODIS no disponibles por ahora.':'Cargando NDVI MODIS…')+(z.nf?' ['+z.nf+'] '+L('Use the NDVI map layer (top-left of the map).','Usa la capa NDVI del mapa (arriba a la izquierda).'):'');return}
+  const d=z.nd;
+  chart('cN',{type:'line',data:{labels:d.map(p=>p[0].slice(5)),datasets:[{label:'NDVI MODIS MOD13Q1 '+NY,data:d.map(p=>p[1]),borderColor:css('--ok'),pointRadius:2,tension:.25},{label:L('Low-cover threshold (0.3)','Umbral de baja cobertura (0.3)'),data:d.map(()=>.3),borderColor:css('--warm'),borderDash:[6,5],pointRadius:0}]},options:{maintainAspectRatio:false}});
+  const ms=[...new Set(d.filter(p=>p[1]<.3).map(p=>+p[0].slice(5,7)))].map(m=>new Date(2000,m-1,1).toLocaleString(lang==='es'?'es':'en',{month:'short'}));
+  n.textContent=L(`Months with low cover (NDVI < 0.3), possibly bare soil: ${ms.join(', ')||'none'}. 250 m pixel at the region center, not a specific field.`,`Meses con baja cobertura (NDVI < 0.3), posible suelo desnudo: ${ms.join(', ')||'ninguno'}. Píxel de 250 m en el centro de la región, no un campo específico.`)}
+async function loadNd(z){try{const o=[],f=n=>'A'+NY+String(n).padStart(3,'0');
+  for(const [a,b] of [[1,145],[161,305],[321,353]]){const r=await fetch(`https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=${z.lat}&longitude=${z.lon}&band=250m_16_days_NDVI&startDate=${f(a)}&endDate=${f(b)}&kmAboveBelow=0&kmLeftRight=0`,{signal:AbortSignal.timeout(20000)});
+    if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();
+    j.subset.forEach(s=>{if(s.data[0]>-2000)o.push([s.calendar_date,+(s.data[0]*1e-4).toFixed(3)])})}
+  if(!o.length)throw new Error('empty');z.nd=o}catch(e){z.nf=(e&&e.message)||'error'}
+  if(z===ZONES[cur])drawNd(z)}
+
+// ---------- IMERG via NASA POWER ----------
+function drawIm(z){const n=$('imn');if(chs.cI){chs.cI.destroy();delete chs.cI}
+  if(!z.im){n.textContent=L(z.imf?'Independent rainfall data unavailable right now.':'Loading independent rainfall data…',z.imf?'Datos de lluvia independientes no disponibles por ahora.':'Cargando datos de lluvia independientes…')+(z.imf?' ['+z.imf+']':'');return}
+  const ys=z.d.yrs.filter(y=>z.im[y]!==undefined),a=ys.map(y=>z.d.R[z.d.yrs.indexOf(y)]),b=ys.map(y=>z.im[y]),ma=mean(a),mb=mean(b);
+  const r=sum(a.map((v,i)=>(v-ma)*(b[i]-mb)))/Math.sqrt(sum(a.map(v=>(v-ma)**2))*sum(b.map(v=>(v-mb)**2)));
+  chart('cI',{type:'line',data:{labels:ys,datasets:[{label:'NASA POWER (PRECTOTCORR)',data:a.map(Math.round),borderColor:css('--acc'),pointRadius:2},{label:z.ims,data:b.map(Math.round),borderColor:css('--warm'),pointRadius:2}]},options:{maintainAspectRatio:false}});
+  n.textContent=L(`Comparison source: ${z.ims}. Correlation r = ${r.toFixed(2)}; mean difference ${Math.round(mb-ma)} mm. Large gaps flag years that local rain gauges should confirm.`,`Fuente de comparación: ${z.ims}. Correlación r = ${r.toFixed(2)}; diferencia media ${Math.round(mb-ma)} mm. Brechas grandes marcan años que deben confirmarse con pluviómetros locales.`)}
+async function loadIm(z){
+  const ft=async u=>{const r=await fetch(u,{signal:AbortSignal.timeout(25000)});if(!r.ok)throw new Error('HTTP '+r.status);return r.json()},err=[];
+  try{
+    const parts=await Promise.all([[2001,2010],[2011,2018],[2019,2025]].map(([a,b])=>ft(`https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG&longitude=${z.lon}&latitude=${z.lat}&start=${a}0101&end=${b}1231&format=JSON`))),P={};
+    parts.forEach(j=>Object.assign(P,j.properties.parameter.IMERG_PRECTOT));
+    const o={},c={};for(const k in P){const y=+k.slice(0,4),m=+k.slice(4,6);if(MS.includes(m)&&P[k]>-900){o[y]=(o[y]||0)+P[k];c[y]=(c[y]||0)+1}}
+    Object.keys(o).forEach(y=>{if(c[y]<140)delete o[y]});if(!Object.keys(o).length)throw new Error('empty');
+    z.im=o;z.ims='GPM IMERG (NASA)';
+  }catch(e){err.push('IMERG '+e.message);
+    try{const j=await ft(`https://archive-api.open-meteo.com/v1/archive?latitude=${z.lat}&longitude=${z.lon}&start_date=2001-01-01&end_date=${Y1}-12-31&daily=precipitation_sum&timezone=UTC`),o={},c={};
+      j.daily.time.forEach((t,i)=>{const y=+t.slice(0,4),m=+t.slice(5,7),v=j.daily.precipitation_sum[i];if(MS.includes(m)&&v!=null){o[y]=(o[y]||0)+v;c[y]=(c[y]||0)+1}});
+      Object.keys(o).forEach(y=>{if(c[y]<140)delete o[y]});if(!Object.keys(o).length)throw new Error('empty');
+      z.im=o;z.ims='ERA5 (ECMWF)';
+    }catch(e2){err.push('ERA5 '+e2.message);z.imf=err.join(' | ')}}
+  if(z===ZONES[cur])drawIm(z)}
+
+// ---------- SRTM slope (OpenTopoData SRTM 30 m) ----------
+function drawTerr(z){const n=$('trn');
+  if(!z.terr){n.textContent=L(z.tf?'Terrain data unavailable right now.':'Loading SRTM terrain…',z.tf?'Datos de terreno no disponibles por ahora.':'Cargando terreno SRTM…');return}
+  const s=z.terr.slope,c=s<3?['low','bajo']:s<8?['moderate','moderado']:['high','alto'];
+  n.innerHTML=L(`Elevation <b>${Math.round(z.terr.el)} m</b> · mean slope around the point (about 1 km) <b>${s.toFixed(1)} %</b> → erosion risk from terrain: <b>${c[0]}</b>. Field-level slope can be steeper: check on site.`,`Elevación <b>${Math.round(z.terr.el)} m</b> · pendiente media alrededor del punto (cerca de 1 km) <b>${s.toFixed(1)} %</b> → riesgo de erosión por terreno: <b>${c[1]}</b>. La pendiente dentro del campo puede ser mayor: verifica en sitio.`)+`<br><small>${L('Source: NASA SRTM 30 m via OpenTopoData.','Fuente: NASA SRTM 30 m vía OpenTopoData.')}</small>`}
+async function loadTerr(z){try{const d=.01,P=[[0,0],[d,0],[-d,0],[0,d],[0,-d]].map(([a,b])=>(z.lat+a).toFixed(4)+','+(z.lon+b).toFixed(4)).join('|'),
+  e=(await (await fetch('https://api.opentopodata.org/v1/srtm30m?locations='+P,{signal:AbortSignal.timeout(20000)})).json()).results.map(r=>r.elevation);
+  if(e.some(v=>v==null))throw 0;const dy=2*d*111320,dx=dy*Math.cos(z.lat*Math.PI/180);
+  z.terr={el:e[0],slope:100*Math.hypot((e[3]-e[4])/dx,(e[1]-e[2])/dy)}}catch(x){z.tf=1}
+  if(z===ZONES[cur]){drawTerr(z);detail(z)}}
+
+$('map').insertAdjacentHTML('afterend',B('small','Click anywhere on the map (inside Mexico) to analyze that point.','Haz clic en cualquier parte del mapa (dentro de México) para analizar ese punto.','style="display:block"'));
+map.on('click',async e=>{const la=+e.latlng.lat.toFixed(2),lo=+e.latlng.lng.toFixed(2);if(la<14||la>33.5||lo<-119||lo>-86)return;
+  const z={n:L('Custom point','Punto personalizado')+' '+la+', '+lo,lat:la,lon:lo};setStatus('Loading NASA data…',{});
+  try{await fetchZone(z)}catch(x){setStatus('Could not load NASA POWER data. Check your connection and reload.',{},1);return}
+  ZONES.push(z);const i=ZONES.length-1;sel.add(new Option(z.n,i));
+  z.m=L.circleMarker([la,lo],{radius:8,color:'#fff',weight:2,fillColor:color(z.s.dT),fillOpacity:.9,bubblingMouseEvents:false}).addTo(map).bindTooltip(z.n).bindPopup('',{minWidth:240}).on('click',()=>show(i));
+  setStatus('Data: NASA POWER · {a}–{b} · {n} regions',{a:Y0,b:Y1,n:ZONES.filter(q=>q.s).length});show(i)});
+
+L.control.layers(null,{'NDVI MODIS (NASA GIBS, Aug 2024)':L.tileLayer('https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/2024-08-12/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png',{maxNativeZoom:9,maxZoom:13,opacity:.75,attribution:'NASA GIBS / MODIS NDVI'})},{position:'topleft'}).addTo(map);
+lab();
+if(ZONES[cur]&&ZONES[cur].s)renderRot(ZONES[cur]);
+})();
+
 </script>
 </body>
 </html>
