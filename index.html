@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MaizeShift Jalisco – Space Tapatíos</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f6f8fc;--card:#fff;--ink:#10224a;--mut:#5b6b8c;--line:#dde4f0;--acc:#1f6feb;--warm:#e0701b;--ok:#1f9a57}
+@media (prefers-color-scheme:dark){:root{--bg:#070d22;--card:#0f1a3a;--ink:#eef2ff;--mut:#9fb0d6;--line:#22305e;--acc:#6ea4ff;--warm:#ff9a4d;--ok:#46d28a}}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+header{padding:28px 20px 8px;max-width:980px;margin:auto}
+h1{margin:0;font-size:clamp(26px,5vw,38px)}
+header p{color:var(--mut);margin:6px 0 0;max-width:720px}
+main{max-width:980px;margin:auto;padding:12px 20px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+select{font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi b{display:block;font-size:28px}
+.kpi span{color:var(--mut);font-size:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px}
+.chartbox{position:relative;height:300px}
+h2{font-size:19px;margin:0 0 8px}
+ul{padding-left:20px;margin:8px 0}
+li{margin:6px 0}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--mut);margin-right:6px}
+#status{color:var(--mut)}
+.err{color:#d33}
+small,footer{color:var(--mut);font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌽 MaizeShift Jalisco</h1>
+  <p>How is the rainfed maize growing season (June–October) changing in Jalisco? NASA climate data, turned into clear signals and practical adaptation ideas for local growers.</p>
+</header>
+<main>
+  <div class="card">
+    <div class="row">
+      <label for="zone"><b>Maize region:</b></label>
+      <select id="zone"></select>
+      <span id="status">Loading NASA data…</span>
+    </div>
+  </div>
+
+  <div class="card"><div class="kpis" id="kpis"></div></div>
+
+  <div class="grid2">
+    <div class="card"><h2>Season temperature (°C)</h2><div class="chartbox"><canvas id="cT"></canvas></div></div>
+    <div class="card"><h2>Season rainfall (mm)</h2><div class="chartbox"><canvas id="cR"></canvas></div></div>
+  </div>
+
+  <div class="card">
+    <h2>What this means for maize growers</h2>
+    <div id="advice"></div>
+    <small>These are climate-based signals to support decisions, not a replacement for local agronomic advice.</small>
+  </div>
+
+  <div class="card">
+    <h2>Method &amp; data</h2>
+    <p><span class="tag">NASA POWER</span> Monthly 2 m air temperature (T2M) and bias-corrected precipitation (PRECTOTCORR), community “AG”, fetched live from the NASA POWER API for the selected point.</p>
+    <p>Growing season = June–October (typical rainfed maize cycle in Jalisco). Earlier period = 1995–2009, recent period = 2010–2025. Trend = least-squares line. Rainfall = daily rate × days in month, summed over the season.</p>
+    <p><small>Limitations: one grid point per region (about 0.5° × 0.625° cells), no crop-yield data, no irrigation or soil data. Next step: add SMAP soil moisture and MODIS/Landsat vegetation (NDVI).</small></p>
+  </div>
+</main>
+<footer style="max-width:980px;margin:auto;padding:0 20px 30px">
+  Team Space Tapatíos · 2026 NASA Space Apps Challenge · Challenge: Field Shift: Adapting Farms with NASA Data
+</footer>
+
+<script>
+const ZONES = {
+  "Los Altos – Tepatitlán":[20.81,-102.76],
+  "Ciénega – Ocotlán":[20.35,-102.77],
+  "Valles – Ameca":[20.55,-104.05],
+  "Sur – Ciudad Guzmán":[19.70,-103.46],
+  "Norte – Lagos de Moreno":[21.36,-101.93]
+};
+const Y0=1995, Y1=2025, SPLIT=2010, MONTHS=[6,7,8,9,10];
+const sel=document.getElementById('zone'), statusEl=document.getElementById('status');
+Object.keys(ZONES).forEach(k=>sel.add(new Option(k,k)));
+let chT=null, chR=null;
+
+const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const sd=a=>{const m=mean(a);return Math.sqrt(mean(a.map(v=>(v-m)**2)))};
+function trend(xs,ys){const mx=mean(xs),my=mean(ys);let n=0,d=0;xs.forEach((x,i)=>{n+=(x-mx)*(ys[i]-my);d+=(x-mx)**2});const b=n/d;return {b,a:my-b*mx}}
+const dim=(y,m)=>new Date(y,m,0).getDate();
+
+async function load(){
+  const [lat,lon]=ZONES[sel.value];
+  statusEl.className='';statusEl.textContent='Loading NASA data…';
+  const url=`https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M,PRECTOTCORR&community=AG&longitude=${lon}&latitude=${lat}&start=${Y0}&end=${Y1}&format=JSON`;
+  try{
+    const r=await fetch(url); if(!r.ok) throw new Error(r.status);
+    const j=await r.json(); const P=j.properties.parameter;
+    const years=[],T=[],R=[];
+    for(let y=Y0;y<=Y1;y++){
+      const t=[],rr=[];
+      MONTHS.forEach(m=>{const k=y+String(m).padStart(2,'0');const a=P.T2M[k],b=P.PRECTOTCORR[k];
+        if(a>-900&&b>-900){t.push(a);rr.push(b*dim(y,m))}});
+      if(t.length===MONTHS.length){years.push(y);T.push(mean(t));R.push(rr.reduce((s,v)=>s+v,0))}
+    }
+    render(years,T,R); statusEl.textContent=`Data: NASA POWER · ${years[0]}–${years[years.length-1]} · ${lat}°, ${lon}°`;
+  }catch(e){
+    statusEl.className='err';
+    statusEl.textContent='Could not load NASA POWER data. Check your internet connection and reload.';
+  }
+}
+
+function render(years,T,R){
+  const idx=y=>years.map((v,i)=>v<SPLIT===y?i:-1).filter(i=>i>=0);
+  const e=idx(true), l=idx(false);
+  const tE=mean(e.map(i=>T[i])), tL=mean(l.map(i=>T[i]));
+  const rE=mean(e.map(i=>R[i])), rL=mean(l.map(i=>R[i]));
+  const cvE=sd(e.map(i=>R[i]))/rE*100, cvL=sd(l.map(i=>R[i]))/rL*100;
+  const dT=tL-tE, dR=(rL-rE)/rE*100;
+  const dry=idxs=>idxs.filter(i=>R[i]<0.85*mean(R)).length;
+  const dryE=dry(e), dryL=dry(l);
+  const tt=trend(years,T);
+
+  document.getElementById('kpis').innerHTML=[
+    [(dT>=0?'+':'')+dT.toFixed(2)+' °C','Season temperature, recent vs earlier period'],
+    [(dR>=0?'+':'')+dR.toFixed(0)+' %','Season rainfall, recent vs earlier period'],
+    [dryL+' vs '+dryE,'Dry seasons (&lt;85% of average): recent vs earlier'],
+    [(tt.b*10>=0?'+':'')+(tt.b*10).toFixed(2)+' °C','Warming trend per decade']
+  ].map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join('');
+
+  const col=getComputedStyle(document.documentElement);
+  const warm=col.getPropertyValue('--warm').trim(), acc=col.getPropertyValue('--acc').trim(), mut=col.getPropertyValue('--mut').trim();
+  if(chT)chT.destroy(); if(chR)chR.destroy();
+  chT=new Chart(document.getElementById('cT'),{type:'line',data:{labels:years,datasets:[
+    {label:'Season mean temperature',data:T.map(v=>+v.toFixed(2)),borderColor:warm,backgroundColor:warm,pointRadius:3,tension:.2},
+    {label:'Trend',data:years.map(y=>+(tt.a+tt.b*y).toFixed(2)),borderColor:mut,borderDash:[6,5],pointRadius:0}]},
+    options:{maintainAspectRatio:false,scales:{y:{title:{display:true,text:'°C'}}}}});
+  const avg=mean(R);
+  chR=new Chart(document.getElementById('cR'),{data:{labels:years,datasets:[
+    {type:'bar',label:'Season rainfall',data:R.map(v=>Math.round(v)),backgroundColor:acc},
+    {type:'line',label:'Long-term average',data:years.map(()=>Math.round(avg)),borderColor:mut,borderDash:[6,5],pointRadius:0}]},
+    options:{maintainAspectRatio:false,scales:{y:{title:{display:true,text:'mm'}}}}});
+
+  const a=[];
+  if(dT>=0.3) a.push(`<b>Heat:</b> the season is ${dT.toFixed(1)} °C warmer than in 1995–2009. Consider adjusting planting dates and choosing heat-tolerant hybrids, especially for the flowering stage.`);
+  else a.push(`<b>Heat:</b> season warming is modest here (${dT.toFixed(1)} °C), but keep monitoring flowering-stage heat.`);
+  if(cvL>cvE||dryL>dryE) a.push(`<b>Water variability:</b> rainfall is ${cvL>cvE?'more':'similarly'} variable (${cvL.toFixed(0)}% vs ${cvE.toFixed(0)}%) and dry seasons are ${dryL>dryE?'more':'not more'} frequent. Plan for supplemental irrigation, mulching or conservation tillage to hold soil moisture.`);
+  else a.push(`<b>Water variability:</b> season rainfall variability has not increased (${cvL.toFixed(0)}% vs ${cvE.toFixed(0)}%), but dry spells inside the season can still hurt yields.`);
+  if(dR<=-5) a.push(`<b>Rainfall level:</b> season rain is ${Math.abs(dR).toFixed(0)}% lower than before. Prefer shorter-cycle varieties and water-saving practices.`);
+  a.push(`<b>Monitoring:</b> combine this climate view with satellite soil moisture (NASA SMAP) and vegetation indices to catch stress early.`);
+  document.getElementById('advice').innerHTML='<ul>'+a.map(x=>`<li>${x}</li>`).join('')+'</ul>';
+}
+sel.addEventListener('change',load);
+load();
+</script>
+</body>
+</html>
