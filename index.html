@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MaizeShift México – Climate-Smart Crop Rotation Explorer</title>
+<meta name="description" content="MaizeShift México: crop-rotation decision support using NASA POWER data. Code and illustrations created with AI assistance (Claude, Anthropic) under human direction.">
+<meta name="generator" content="AI-assisted code (Claude, Anthropic); directed and reviewed by Team Space Tapatíos">
+<title>MaizeShift México | Agricultura inteligente y sostenible</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js">
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f3f6fb;--card:#fff;--ink:#10224a;--mut:#5b6b8c;--line:#dde4f0;--acc:#1f6feb;--warm:#e0701b;--ok:#1f9a57;--hd:#0b1d4d}
@@ -32,21 +35,150 @@ th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
 tr.r{cursor:pointer}tr.r:hover,tr.sel{background:rgba(31,111,235,.12)}
 .wrap{overflow-x:auto;max-height:470px;overflow-y:auto}
 .leg span{display:inline-block;width:12px;height:12px;border-radius:50%;margin:0 4px 0 12px;vertical-align:middle}
-li{margin:6px 0}input[type=range]{width:100%}#rot label span{display:block;font-size:13px;margin-top:8px}.btn{font:inherit;font-size:13px;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}.btn:hover{border-color:var(--acc)}small,footer{color:var(--mut);font-size:13px}.err{color:#d33}
+li{margin:6px 0}details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}summary{cursor:pointer;font-weight:600}.chip{font:inherit;font-size:13px;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;margin:0 6px 6px 0}.chip.on{background:var(--ok);color:#fff;border-color:var(--ok)}.go{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}.cc{border:1px solid var(--line);border-radius:12px;padding:12px}.cc dt{font-weight:600;font-size:13px;margin-top:6px}.cc dd{margin:0;font-size:13px;color:var(--mut)}#bar{max-width:1100px;margin:auto;padding:14px 20px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}.tab{font:inherit;font-size:14px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}.tab.on{background:var(--acc);color:#fff;border-color:var(--acc)}#sq{font:inherit;font-size:14px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);flex:1;min-width:200px}.src a{color:var(--acc)}input[type=range]{width:100%}#rot label span{display:block;font-size:13px;margin-top:8px}.btn{font:inherit;font-size:13px;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}.btn:hover{border-color:var(--acc)}small,footer{color:var(--mut);font-size:13px}.err{color:#d33}
+
+/* ===== MaizeShift México · visual system v2 ===== */
+.skip-link{position:absolute;left:-9999px;top:8px;background:#fff;color:#102844;padding:10px;z-index:99}.skip-link:focus{left:8px}
+:root{--bg:#f3f7f5;--card:#fff;--ink:#102844;--mut:#62758a;--line:#dce6e4;--acc:#0876c9;--warm:#d89b2b;--ok:#168448;--hd:#061c35}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#f4f8f7,#edf3f2);color:#102844}
+.top.brandbar{max-width:none;padding:13px clamp(16px,4vw,58px);display:flex;align-items:center;justify-content:space-between;gap:24px;background:linear-gradient(110deg,#04162b,#082c4d 65%,#063a56);border-bottom:1px solid rgba(126,214,170,.3);position:relative;z-index:5}
+.brand{display:block;flex:0 0 auto}.brand img{width:min(330px,30vw);height:auto;display:block}
+.brand-copy{display:flex;flex-direction:column;color:#e8f4f2;letter-spacing:.12em;font-size:12px;line-height:1.35;border-left:1px solid rgba(255,255,255,.25);padding-left:22px;margin-right:auto}
+.brand-copy strong{font-size:15px;color:#8fe05d}.brand-copy small{color:#b7cbd4;letter-spacing:0;font-size:11px;margin-top:5px}
+.brand-meta{display:flex;flex-direction:column;align-items:flex-end;color:#b8d1dc;font-size:10px;letter-spacing:.15em}.brand-meta b{font-size:14px;color:white}
+.lang-btn{margin-top:6px;color:#fff;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22)}
+#bar{max-width:none;padding:9px clamp(14px,3vw,44px);background:#09233e;position:sticky;top:0;z-index:20;box-shadow:0 8px 24px #071d2b20}
+.tab{border:1px solid transparent;background:transparent;color:#d8e8ed;border-radius:9px;padding:9px 12px;font-weight:650;transition:.2s}
+.tab:hover{background:#ffffff12;border-color:#ffffff24;color:#fff}.tab.on{background:#1b8b55;color:white;border-color:#1b8b55;box-shadow:0 5px 16px #16844835}
+#sq{background:#fff;border-color:#d5e2e2;color:#102844;max-width:260px}
+main{max-width:1500px;padding:18px clamp(14px,2.5vw,38px) 50px}
+.hero-landing{min-height:490px;position:relative;isolation:isolate;overflow:hidden;border-radius:22px;background:#09253c url("assets/images/hero-maizefield.png") center 57%/cover no-repeat;box-shadow:0 18px 44px #08233b2c;margin:2px 0 20px;color:#fff}
+.hero-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(2,19,33,.9),rgba(4,27,42,.68) 46%,rgba(3,28,42,.06) 100%),linear-gradient(0deg,rgba(1,16,28,.48),transparent 45%)}
+.hero-content{max-width:760px;padding:clamp(32px,5vw,76px);position:relative}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.18em;color:#a9e47b;margin:0 0 14px}.eyebrow.dark{color:#168448}
+.hero-content h1{font-size:clamp(38px,5.6vw,76px);line-height:.98;letter-spacing:-.045em;margin:0 0 18px;color:#fff;text-shadow:0 3px 24px #00101b80}
+.hero-content h1 em{font-style:normal;color:#9be34e}.hero-content>p:not(.eyebrow){font-size:clamp(16px,1.5vw,20px);line-height:1.5;color:#edf7f1;max-width:610px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.action{font:inherit;font-weight:750;border:0;border-radius:999px;padding:13px 20px;cursor:pointer;box-shadow:0 7px 20px #00131c35;transition:transform .2s,box-shadow .2s}
+.action:hover{transform:translateY(-3px);box-shadow:0 12px 25px #00131c4d}.action.primary{background:#1b9b4c;color:white}.action.blue{background:#0876d1;color:white}.action.light{background:#fff;color:#102844}
+.hero-location{display:inline-grid;grid-template-columns:32px auto;column-gap:8px;align-items:center;margin-top:30px;padding:10px 16px;border:1px solid #ffffff4d;border-radius:14px;background:#062b3eb8;backdrop-filter:blur(8px)}
+.hero-location .pin{grid-row:span 2;font-size:26px;color:#9be34e}.hero-location small{color:#c9ded9}
+.hero-foot{position:absolute;bottom:16px;right:24px;left:24px;display:flex;justify-content:space-between;color:#d7e7df;font-size:10px;letter-spacing:.16em}
+.visual-strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin:18px 0 28px}
+.visual-tile{min-height:150px;border:0;border-radius:15px;overflow:hidden;position:relative;text-align:left;color:white;padding:16px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;background:linear-gradient(0deg,#061b2dd9,transparent 75%),url("assets/images/hero-maizefield.png") center/cover;box-shadow:0 8px 22px #0b2d3418;transition:.25s}
+.visual-tile:hover{transform:translateY(-4px);filter:saturate(1.15)}.visual-tile span{font-size:10px;letter-spacing:.15em;color:#c5eaa9}.visual-tile b{font-size:16px}
+.tile-corn{background-position:60% 80%}.tile-soil{background-position:50% 95%;filter:saturate(.8)}.tile-water{background:linear-gradient(135deg,#063f60,#0c9ab1)}.tile-climate{background:linear-gradient(135deg,#25466a,#7fa6b0)}.tile-tech{background-position:75% 55%}.tile-sustain{background:linear-gradient(135deg,#17472d,#8aa85a)}
+.home-intro{display:grid;grid-template-columns:minmax(260px,2fr) repeat(3,minmax(120px,.7fr));gap:18px;align-items:center;padding:24px 28px;border:1px solid #dce7e2;border-radius:18px;background:linear-gradient(115deg,#fff,#eef6f1);margin:20px 0}
+.home-intro h2{font-size:clamp(22px,2.5vw,32px);line-height:1.12;max-width:580px;margin:0 0 10px}.home-intro p{color:#61758a;margin:0;max-width:660px}
+.intro-stat{border-left:1px solid #cbdad4;padding-left:18px;display:flex;flex-direction:column}.intro-stat strong{font-size:28px;color:#168448}.intro-stat span{font-size:12px;color:#5c7183;line-height:1.4}
+.card{border:1px solid #dce6e2;border-radius:18px;padding:clamp(16px,2vw,26px);margin-top:18px;box-shadow:0 7px 22px #0b2d3410;background:#fff}
+h2{font-size:clamp(19px,2vw,25px);letter-spacing:-.02em;color:#0d2d48}
+.section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}.section-heading h2{margin:0}.section-note{font-size:12px;color:#718495}
+.crop-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.crop-mini{border:1px solid #e0e9e5;border-radius:14px;padding:16px;background:linear-gradient(160deg,#fff,#f6faf7);transition:.2s}
+.crop-mini:hover{transform:translateY(-3px);box-shadow:0 10px 24px #102c4217}.crop-mini h3{margin:4px 0 0;color:#123652}.crop-mini i{font-size:12px;color:#168448}.crop-mini p{font-size:13px;color:#526a7b;min-height:55px}.crop-mini small{font-size:11px;color:#758697}.crop-symbol{font-size:25px}
+.caution{padding:12px 14px;background:#fff8e8;border-left:4px solid #d9a52d;border-radius:9px;color:#69552a;font-size:13px}
+.association-layout,.soil-layout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(280px,1.2fr);gap:24px;align-items:center}
+.assoc-diagram{padding:24px;border-radius:16px;background:repeating-linear-gradient(0deg,#d5e8c9 0 2px,#eaf3e4 2px 62px);border:1px solid #c8dcc4}
+.assoc-row{display:flex;justify-content:space-around;align-items:center;gap:8px;margin:14px 0}.plant{display:inline-flex;align-items:center;justify-content:center;width:86px;height:62px;border-radius:50%;font-weight:800;font-size:12px;box-shadow:0 5px 12px #193d2520}.plant.maize{background:#f5d66c;color:#4b3c0c}.plant.bean{background:#9bce8c;color:#17472b}.plant.squash{background:#d3e5a5;color:#425b17}
+.assoc-diagram small{display:block;text-align:center;color:#61745d;margin-top:16px}.mini-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.mini-columns article{padding:15px;background:#f3f8f5;border-radius:12px}.mini-columns p{font-size:13px;color:#607485;margin-bottom:0}
+.soil-profile{border-radius:15px;overflow:hidden;border:1px solid #d7e2dc}.soil-layer{height:78px;padding:12px 18px;color:white;display:flex;flex-direction:column;justify-content:center}.soil-layer span{font-size:12px;opacity:.9}.topsoil{background:linear-gradient(90deg,#5c3a21,#815b37)}.subsoil{background:linear-gradient(90deg,#9b704b,#b28a62)}.parent{background:linear-gradient(90deg,#c1a17c,#d0b38e);color:#3e3022}.rock{background:linear-gradient(90deg,#6e7373,#a2a5a0)}
+.soil-topics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.soil-topics article{padding:14px;border:1px solid #e1eae5;border-radius:12px}.soil-topics b{color:#168448}.soil-topics p{font-size:13px;color:#607485;margin:5px 0 0}
+.practice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.practice-grid article{padding:18px;border-radius:14px;background:linear-gradient(145deg,#f2f8f4,#fff);border:1px solid #dce9e1}.practice-grid article>span{font-size:11px;color:#168448;font-weight:800;letter-spacing:.12em}.practice-grid h3{margin:8px 0;color:#123650}.practice-grid p{font-size:13px;color:#5f7383}
+.water-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}.water-grid article{padding:20px;border-radius:14px;background:#f2f8fb;border:1px solid #d9e8ed}.water-icon{font-size:32px;color:#0876c9}.water-grid p{font-size:13px;color:#617586}
+.farm-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.farm-form label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#24435a}.farm-form input,.farm-form select{width:100%;padding:12px;border:1px solid #d6e2df;border-radius:10px;background:#fbfdfc;color:#15344a;font:inherit}.farm-form .full{grid-column:1/-1}.farm-result{margin-top:18px;padding:18px;border-radius:14px;background:#f1f8f3;border:1px solid #d7e8da;color:#244b35}.farm-result h3{margin-top:0}.farm-result li{margin:8px 0}
+.calendar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.calendar-grid article{padding:16px;border-radius:13px;background:#f3f8f5;border-top:4px solid #168448}.calendar-grid b{color:#0b6b3b;font-size:13px}.calendar-grid p{font-size:13px;color:#5f7181}
+.library-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.library-grid a{display:flex;flex-direction:column;gap:7px;padding:18px;border:1px solid #dce8e2;border-radius:13px;text-decoration:none;color:#173a52;background:#fbfdfb;transition:.2s}.library-grid a:hover{border-color:#168448;transform:translateY(-2px)}.library-grid b{font-size:17px;color:#168448}.library-grid span{font-size:13px;color:#607486}
+footer{max-width:none!important;padding:22px clamp(16px,4vw,58px) 28px!important;background:#061c35;color:#c5d7df!important;border-top:4px solid #168448}
+#map{min-height:380px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #78c94a;outline-offset:3px}
+@media(max-width:1000px){.visual-strip{grid-template-columns:repeat(3,1fr)}.crop-grid{grid-template-columns:repeat(3,1fr)}.practice-grid{grid-template-columns:repeat(2,1fr)}.calendar-grid{grid-template-columns:repeat(3,1fr)}.home-intro{grid-template-columns:1fr 1fr}.brand-copy{display:none}}
+@media(max-width:680px){.top.brandbar{padding:12px 14px}.brand img{width:220px}.brand-meta{font-size:8px}#bar{position:relative;gap:5px;padding:10px}.tab{font-size:12px;padding:7px 9px}#sq{min-width:100%;max-width:none}.hero-landing{min-height:560px;background-position:58% center}.hero-content{padding:30px 22px}.hero-content h1{font-size:42px}.hero-actions{display:grid}.action{width:100%}.hero-foot{font-size:8px}.visual-strip{grid-template-columns:repeat(2,1fr);gap:8px}.visual-tile{min-height:115px}.home-intro{grid-template-columns:1fr 1fr;padding:18px}.home-intro>div:first-child{grid-column:1/-1}.intro-stat{padding-left:10px}.crop-grid{grid-template-columns:repeat(2,1fr)}.association-layout,.soil-layout{grid-template-columns:1fr}.mini-columns{grid-template-columns:1fr}.practice-grid,.water-grid,.library-grid{grid-template-columns:1fr}.calendar-grid{grid-template-columns:1fr 1fr}.farm-form{grid-template-columns:1fr}.farm-form .full{grid-column:auto}.section-heading{align-items:flex-start;flex-direction:column}.g2{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
 </style>
 </head>
 <body>
-<div class="top"><div>
-  <h1>🌽 MaizeShift México</h1>
-  <p data-es='Herramienta de apoyo a decisiones para explorar rotaciones de cultivos en México: datos climáticos y de humedad del suelo de la NASA, características de suelo y cultivos, y las prioridades del agricultor.'>A decision-support tool to explore crop rotations across Mexico: NASA climate and soil-wetness data, soil and crop characteristics, and the farmer’s priorities.</p>
-</div></div>
+<a class="skip-link" href="#inicio">Saltar al contenido principal</a>
+<header class="top brandbar">
+  <a class="brand" href="#inicio" aria-label="MaizeShift México, inicio"><img src="assets/images/maizeshift-logo.svg" alt="Logotipo MaizeShift México"></a>
+  <div class="brand-copy"><span>SMART AGRICULTURE</span><strong>FOR A SUSTAINABLE FUTURE</strong><small data-es="Ciencia, tecnología y campo para un México más resiliente.">Science, technology and farming for a more resilient Mexico.</small></div>
+  <div class="brand-meta"><span>SPACE TAPATÍOS</span><b>ORION33</b><button class="btn lang-btn" id="lang" type="button" aria-label="Cambiar idioma">EN</button></div>
+</header>
+<nav id="bar" aria-label="Navegación principal">
+  <button class="tab" data-t="home" data-es="Inicio">Inicio</button>
+  <button class="tab" data-t="crops" data-es="Cultivos">Cultivos</button>
+  <button class="tab" data-t="rotation" data-es="Rotación">Rotación</button>
+  <button class="tab" data-t="association" data-es="Asociación">Asociación</button>
+  <button class="tab" data-t="milpa" data-es="Milpa y suelo">Milpa y suelo</button>
+  <button class="tab" data-t="techniques" data-es="Técnicas">Técnicas</button>
+  <button class="tab" data-t="climate" data-es="Clima y agua">Clima y agua</button>
+  <button class="tab" data-t="assistant" data-es="Asistente">Asistente</button>
+  <button class="tab" data-t="calendar" data-es="Calendario">Calendario</button>
+  <button class="tab" data-t="faq" data-es="Preguntas">Preguntas</button>
+  <button class="tab" data-t="library" data-es="Biblioteca">Biblioteca</button>
+  <button class="tab" data-t="method" data-es="Metodología">Metodología</button>
+  <input id="sq" type="search" aria-label="Buscar en MaizeShift" placeholder="Buscar cultivos, suelo, agua…">
+</nav>
 <main>
-  <div class="card" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-    <b data-es='Región:'>Region:</b><select id="zone"></select><span id="status" style="color:var(--mut)">Loading NASA data…</span><button class="btn" id="csv1" data-es='Descargar CSV'>Download CSV</button><button class="btn" id="csv2" data-es='CSV de todas las regiones'>All regions CSV</button><button class="btn" id="lang">ES</button>
-  </div>
-  <div class="kpis" id="kpis"></div>
 
-  <div class="card" id="rot"><h2 data-es='Explorador de rotaciones de cultivos'>Crop-rotation explorer</h2>
+  <section class="hero-landing" id="inicio" data-tab="home" aria-label="Presentación MaizeShift México">
+    <div class="hero-shade"></div>
+    <div class="hero-content">
+      <p class="eyebrow">AGRICULTURA INTELIGENTE · MÉXICO</p>
+      <h1>SMART AGRICULTURE<br>FOR A <em>SUSTAINABLE</em> FUTURE</h1>
+      <p data-es="Una plataforma de apoyo a las decisiones agrícolas para conocer cultivos, planificar rotaciones y cuidar los recursos de cada parcela.">A decision-support platform to explore crops, plan rotations and protect the resources of every farm.</p>
+      <div class="hero-actions">
+        <button class="action primary" data-go="crops" data-es="Explorar cultivos">Explorar cultivos</button>
+        <button class="action blue" data-go="rotation" data-es="Planificar rotación">Planificar rotación</button>
+        <button class="action light" data-go="assistant" data-es="Analizar mi parcela">Analizar mi parcela</button>
+      </div>
+      <div class="hero-location"><span class="pin">⌖</span><b>Jalisco, México</b><small data-es="Enfoque regional · visión nacional">Regional focus · national vision</small></div>
+    </div>
+    <div class="hero-foot"><span>01 / 04</span><span>MAIZESHIFT MÉXICO — SPACE TAPATÍOS ORION33</span></div>
+  </section>
+
+  <section class="visual-strip" data-tab="home" aria-label="Áreas de agricultura sostenible">
+    <button class="visual-tile tile-corn" data-go="crops"><span>01</span><b data-es="Cultivos">Crops</b></button>
+    <button class="visual-tile tile-soil" data-go="milpa"><span>02</span><b data-es="Suelo vivo">Living soil</b></button>
+    <button class="visual-tile tile-water" data-go="climate"><span>03</span><b data-es="Agua">Water</b></button>
+    <button class="visual-tile tile-climate" data-go="climate"><span>04</span><b data-es="Clima">Climate</b></button>
+    <button class="visual-tile tile-tech" data-go="techniques"><span>05</span><b data-es="Técnicas">Techniques</b></button>
+    <button class="visual-tile tile-sustain" data-go="library"><span>06</span><b data-es="Sostenibilidad">Sustainability</b></button>
+  </section>
+
+  <section class="home-intro" data-tab="home">
+    <div><span class="eyebrow dark">DECISION SUPPORT · AGRICULTURA DE PRECISIÓN</span>
+      <h2 data-es="Decisiones informadas para parcelas más resilientes.">Informed decisions for more resilient farms.</h2>
+      <p data-es="Integramos conocimiento agronómico, datos ambientales y herramientas prácticas. Las recomendaciones son orientativas y deben contrastarse con análisis y asesoría local.">We bring together agronomic knowledge, environmental data and practical tools. Recommendations are guidance and must be checked against field tests and local advice.</p>
+    </div>
+    <div class="intro-stat"><strong>38</strong><span data-es="regiones agrícolas de México incluidas en el explorador climático">agricultural regions of Mexico in the climate explorer</span></div>
+    <div class="intro-stat"><strong>NASA</strong><span data-es="datos ambientales con fuente y limitaciones documentadas">environmental data with documented sources and limitations</span></div>
+    <div class="intro-stat"><strong>JAL</strong><span data-es="enfoque especial en las regiones productivas de Jalisco">special focus on Jalisco production regions</span></div>
+  </section>
+  <p id="nores" style="display:none" data-es='Sin resultados. Prueba con otra palabra.'>No results. Try another word.</p>
+  <div class="card" data-tab="rotation climate" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <b data-es="Región:">Región:</b><select id="zone"></select><span id="status" style="color:var(--mut)">Loading NASA data…</span><button class="btn" id="csv1" data-es='Descargar CSV'>Download CSV</button><button class="btn" id="csv2" data-es='CSV de todas las regiones'>All regions CSV</button>
+  </div>
+  <div class="kpis" id="kpis" data-tab="climate"></div>
+
+  <div class="card" id="hero" data-tab="home"><div id="slide"></div><div id="dots" style="margin-top:10px"></div></div>
+  <div class="card" data-tab="home"><h2 data-es='Bienvenido a MaizeShift'>Welcome to MaizeShift</h2>
+    <p data-es='Una plataforma para agricultores, estudiantes y curiosos: explora cultivos, compara rotaciones con datos climáticos y de humedad del suelo de la NASA, y aprende prácticas para conservar la fertilidad del suelo en Jalisco.'>A platform for farmers, students and curious people: explore crops, compare rotations using NASA climate and soil-wetness data, and learn practices to protect soil fertility in Jalisco.</p>
+    <div class="go"><button class="btn" data-go="crops" data-es='🌾 Explorar cultivos'>🌾 Explore crops</button><button class="btn" data-go="rotation" data-es='🔄 Planificar rotación'>🔄 Plan a rotation</button><button class="btn" data-go="climate" data-es='🌦️ Ver clima'>🌦️ See climate</button><button class="btn" data-go="milpa" data-es='🌽 Conocer la milpa'>🌽 Learn about the milpa</button><button class="btn" data-go="faq" data-es='❓ Preguntas'>❓ Questions</button></div>
+    <small data-es='Las ilustraciones fueron generadas con asistencia de IA (Claude) para este proyecto. Los valores de los cultivos son rangos típicos de orientación: verifícalos con INIFAP, SADER o un asesor local antes de decidir.'>Illustrations were generated with AI assistance (Claude) for this project. Crop values are typical orientation ranges: verify them with INIFAP, SADER or a local advisor before deciding.</small></div>
+  <div class="card" data-tab="crops"><h2 data-es='Catálogo de cultivos'>Crop catalog</h2><div id="chips"></div><div class="cg" id="cat"></div>
+    <small data-es='Rangos típicos y orientativos, no garantías de producción. Consulta paquetes tecnológicos del INIFAP (gob.mx/inifap) y orientación de la FAO (fao.org), y confirma con análisis de suelo y asesoría local.'>Typical, orientation-only ranges, not production guarantees. Consult INIFAP technical packages (gob.mx/inifap) and FAO guidance (fao.org), and confirm with soil tests and local advice.</small></div>
+  <div class="card" data-tab="faq"><h2 data-es='Preguntas frecuentes'>Frequently asked questions</h2>
+    <details><summary data-es='¿Por qué es importante rotar los cultivos?'>Why is crop rotation important?</summary><p data-es='Alternar cultivos ayuda a romper ciclos de plagas y enfermedades, varía la demanda de nutrientes y permite incluir leguminosas. Los resultados dependen de cada parcela.'>Alternating crops helps break pest and disease cycles, varies nutrient demand and allows legumes to be included. Results depend on each plot.</p></details>
+    <details><summary data-es='¿Qué puedo sembrar después del maíz?'>What can I plant after maize?</summary><p data-es='Una opción común es una leguminosa como el frijol; el sorgo es una alternativa de menor demanda de agua. Depende del agua, la temporada y el mercado. Compara opciones en el Planificador de rotaciones.'>A common option is a legume such as bean; sorghum is a lower-water alternative. It depends on water, season and market. Compare options in the Rotation Planner.</p></details>
+    <details><summary data-es='¿El frijol ayuda a mejorar el suelo?'>Does bean help improve the soil?</summary><p data-es='Como leguminosa, el frijol fija nitrógeno con bacterias de sus raíces y parte puede beneficiar al cultivo siguiente. No sustituye un análisis de suelo.'>As a legume, bean fixes nitrogen with root bacteria and part of it can benefit the next crop. It does not replace a soil test.</p></details>
+    <details><summary data-es='¿Qué cultivos pueden sembrarse juntos?'>Which crops can be grown together?</summary><p data-es='El ejemplo tradicional es la milpa: maíz, frijol y calabaza. Consulta la pestaña Milpa y suelo.'>The traditional example is the milpa: maize, beans and squash. See the Milpa &amp; Soil tab.</p></details>
+    <details><summary data-es='¿Cómo puedo recuperar un suelo deteriorado?'>How can I recover a degraded soil?</summary><p data-es='Principios generales: mantener el suelo cubierto, aportar materia orgánica (residuos, composta), diversificar con leguminosas y reducir la labranza. Haz un análisis de suelo para guiar las decisiones.'>General principles: keep the soil covered, add organic matter (residues, compost), diversify with legumes and reduce tillage. Do a soil test to guide decisions.</p></details>
+    <details><summary data-es='¿Qué es un cultivo de cobertura?'>What is a cover crop?</summary><p data-es='Es un cultivo que se siembra principalmente para proteger y mejorar el suelo, no para cosecharlo.'>A crop grown mainly to protect and improve the soil rather than to harvest.</p></details>
+    <details><summary data-es='¿Cómo puedo evitar la erosión?'>How can I avoid erosion?</summary><p data-es='Mantén cobertura vegetal o de residuos, reduce la labranza y evita dejar el suelo desnudo en la temporada de lluvias.'>Keep plant or residue cover, reduce tillage and avoid leaving bare soil in the rainy season.</p></details>
+    <details><summary data-es='¿Qué hago si hay poca agua?'>What if water is scarce?</summary><p data-es='Considera cultivos de menor demanda de agua, conserva la humedad con cobertura de residuos y evalúa riego de auxilio. El Planificador de rotaciones muestra el efecto de un año seco.'>Consider lower-water crops, conserve moisture with residue cover and evaluate supplemental irrigation. The Rotation Planner shows the effect of a dry year.</p></details>
+    <small data-es='Respuestas generales y orientativas; adáptalas con análisis de suelo, clima local y asesoría técnica.'>General, orientation-only answers; adapt them with soil tests, local climate and technical advice.</small></div>
+  <div class="card" id="rot" data-tab="rotation"><h2 data-es='Explorador de rotaciones de cultivos'>Crop-rotation explorer</h2>
     <p data-es='Elige tu región (arriba), tu tipo de suelo y tus prioridades. MaizeShift combina clima y humedad del suelo de la NASA con características de cultivos para comparar rotaciones.'>Pick your region (above), soil type and priorities. MaizeShift combines NASA climate and soil-wetness data with crop characteristics to compare rotations.</p>
     <div class="g2"><div>
       <label><b data-es='Tipo de suelo'>Soil type</b><br><select id="soil"><option value="sand" data-es='Arenoso (drena rápido)'>Sandy (drains fast)</option><option value="loam" selected data-es='Franco'>Loam</option><option value="clay" data-es='Arcilloso (retiene agua)'>Clay (holds water)</option></select></label>
@@ -59,7 +191,7 @@ li{margin:6px 0}input[type=range]{width:100%}#rot label span{display:block;font-
       <label><span data-es='Bajo costo de insumos'>Low input cost</span><input type="range" id="p_c" min="0" max="5" value="3"></label>
     </div><div id="rres"></div></div></div>
 
-  <div class="g2">
+  <div class="g2" data-tab="climate">
     <div class="card"><h2 data-es='Mapa de regiones maiceras'>Map of maize regions</h2>
       <div id="map"></div>
       <small class="leg"><i style="font-style:normal" data-es="Calentamiento 2010–2025 vs 1995–2009:">Warming 2010–2025 vs 1995–2009:</i> <span style="background:#4a90e2"></span>&lt; 0.3 °C <span style="background:#f5c542"></span>0.3–0.7 °C <span style="background:#e0701b"></span>&gt; 0.7 °C · <i style="font-style:normal" data-es="clic en una región">click a region</i></small>
@@ -70,7 +202,7 @@ li{margin:6px 0}input[type=range]{width:100%}#rot label span{display:block;font-
     </div>
   </div>
 
-  <div class="g2">
+  <div class="g2" data-tab="climate">
     <div class="card"><h2 data-es='Tendencia de temperatura de la temporada (°C)'>Season temperature trend (°C)</h2><div class="cb"><canvas id="cT"></canvas></div></div>
     <div class="card"><h2 data-es='Lluvia de la temporada por año (mm)'>Season rainfall by year (mm)</h2><div class="cb"><canvas id="cR"></canvas></div></div>
     <div class="card"><h2 data-es='Temperatura mensual: periodo anterior vs reciente (°C)'>Monthly temperature: earlier vs recent (°C)</h2><div class="cb"><canvas id="cMT"></canvas></div></div>
@@ -79,25 +211,165 @@ li{margin:6px 0}input[type=range]{width:100%}#rot label span{display:block;font-
     <div class="card"><h2 data-es='Humedad del suelo en zona de raíces, media de la temporada (0–1)'>Root-zone soil wetness, season mean (0–1)</h2><div class="cb"><canvas id="cS"></canvas></div><small id="snote"></small></div>
   </div>
 
-  <div class="card"><h2 data-es='Qué significa para los productores de maíz'>What this means for maize growers</h2><div id="advice"></div>
+  <div class="card" data-tab="climate"><h2 data-es='Qué significa para los productores de maíz'>What this means for maize growers</h2><div id="advice"></div>
     <small data-es='Las tendencias climáticas no son pronósticos de rendimiento. Son señales para apoyar decisiones, junto con asesoría agronómica local.'>Climate trends are not yield forecasts. These are signals to support decisions, to be combined with local agronomic advice.</small></div>
 
-  <div class="card"><h2 data-es='Método y datos'>Method &amp; data</h2>
+  <div class="card" data-tab="milpa"><h2 data-es='La milpa mexicana'>The Mexican milpa</h2>
+    <p data-es='La milpa es un sistema agrícola tradicional de Mesoamérica: un policultivo en el que el maíz se siembra junto con frijol, calabaza y chile, entre otras especies, en la misma parcela. Es más que un sistema de cultivo: reúne conocimiento cultural, económico y técnico acumulado durante siglos.'>The milpa is a traditional Mesoamerican farming system: a polyculture in which maize is grown together with beans, squash and chile, among other species, on the same plot. It is more than a cropping system: it holds centuries of cultural, economic and technical knowledge.</p></div>
+  <div class="card" data-tab="milpa"><h2 data-es='Cómo colaboran sus componentes'>How its components work together</h2>
+    <ul><li data-es='<b>Maíz:</b> alimento base y soporte para que el frijol trepe.'><b>Maize:</b> the staple crop and a support for climbing beans.</li>
+    <li data-es='<b>Frijol:</b> leguminosa; el nitrógeno que fija puede aumentar los nutrientes disponibles para el maíz.'><b>Common bean:</b> a legume; the nitrogen it fixes can raise nutrient availability for maize.</li>
+    <li data-es='<b>Calabaza:</b> suele describirse como cobertura del suelo entre surcos, lo que reduce su exposición.'><b>Squash:</b> commonly described as ground cover between rows, which reduces soil exposure.</li>
+    <li data-es='<b>Chile y quelites:</b> diversifican la dieta, el ingreso y la biodiversidad de la parcela.'><b>Chile and quelites (wild greens):</b> diversify diet, income and plot biodiversity.</li></ul></div>
+  <div class="card" data-tab="milpa"><h2 data-es='Milpa vs. rotación de cultivos'>Milpa vs. crop rotation</h2>
+    <p data-es='<b>Milpa:</b> varias especies crecen juntas al mismo tiempo en la misma superficie (policultivo). <b>Rotación:</b> los cultivos se alternan por turnos, ciclo tras ciclo, en una parcela; ayuda a mantener nutrientes del suelo y a romper ciclos de plagas. Son estrategias de diversificación que pueden combinarse.'><b>Milpa:</b> several species grow together at the same time on the same area (polyculture). <b>Rotation:</b> crops take turns, cycle after cycle, on a plot; it helps maintain soil nutrients and break pest cycles. Both are diversification strategies and can be combined.</p>
+    <small data-es='El Planificador de rotaciones puntúa secuencias de cultivos. La milpa no se puntúa numéricamente porque el policultivo requiere datos específicos de campo que esta herramienta no tiene.'>The Rotation Planner scores crop sequences. The milpa is not scored numerically because intercropping needs field-specific data this tool does not have.</small></div>
+  <div class="card" data-tab="milpa"><h2 data-es='Principios para conservar el suelo'>Principles to protect the soil</h2>
+    <ul><li data-es='Mantener el suelo cubierto (cultivos, coberturas o residuos).'>Keep the soil covered (crops, cover crops or residues).</li>
+    <li data-es='Diversificar especies e incluir leguminosas, en lugar de maíz continuo por muchos años.'>Diversify species and include legumes instead of many years of continuous maize.</li>
+    <li data-es='Reducir la labranza para disturbar menos el suelo.'>Reduce tillage to disturb the soil less.</li></ul>
+    <small data-es='Un estudio en Puebla atribuye parte de la erosión en tierras de temporal a prácticas asociadas con el monocultivo de maíz. En la Sierra de Manantlán, Jalisco, programas comunitarios recuperaron la milpa en 474 hectáreas.'>A study in Puebla attributes part of the erosion on rainfed land to practices linked to maize monoculture. In the Sierra de Manantlán, Jalisco, community programs recovered milpa on 474 hectares.</small></div>
+  <div class="card src" data-tab="milpa"><h2 data-es='Fuentes'>Sources</h2>
+    <ul><li><a href="https://www.biodiversidad.gob.mx/diversidad/sistemas-productivos/milpa" target="_blank" rel="noopener">CONABIO – Biodiversidad Mexicana: Milpa</a></li>
+    <li><a href="https://www.jornada.com.mx/2018/02/17/cam-secreto.html" target="_blank" rel="noopener">CIMMYT, La Jornada del Campo (2018): milpa interactions</a></li>
+    <li><a href="https://dialnet.unirioja.es/descarga/articulo/9377977.pdf" target="_blank" rel="noopener">Maize agroecosystem sustainability, Chignautla, Puebla</a></li>
+    <li><a href="https://es.mongabay.com/2016/01/la-simbiosis-de-los-bosques-y-el-maiz-en-mexico/" target="_blank" rel="noopener">Mongabay (2016): Sierra de Manantlán, Jalisco</a></li></ul>
+    <small data-es='Conservar el suelo cubierto, diversificar y reducir la labranza son principios generales de la agricultura de conservación; deben adaptarse a cada parcela.'>Keeping soil covered, diversifying and reducing tillage are general conservation-agriculture principles; they must be adapted to each plot.</small></div>
+
+  <div class="card" data-tab="method"><h2 data-es='Método y datos'>Method &amp; data</h2>
     <p data-es='<b>NASA POWER</b> (comunidad “AG”): temperatura del aire a 2 m (T2M), precipitación corregida (PRECTOTCORR), humedad del suelo en zona de raíces (GWETROOT) y temperatura máxima diaria (T2M_MAX), consultadas en vivo para las coordenadas de cada región, 1995–2025.'><b>NASA POWER</b> (community “AG”): 2 m air temperature (T2M), bias-corrected precipitation (PRECTOTCORR), root-zone soil wetness (GWETROOT) and daily maximum temperature (T2M_MAX), fetched live for each region’s coordinates, 1995–2025.</p>
     <p data-es='Temporada de cultivo = junio a octubre (ciclo típico de temporal). Periodo anterior = 1995–2009, reciente = 2010–2025. Tendencia = recta de mínimos cuadrados. Una temporada seca tiene lluvia menor al 85% del promedio 1995–2025. Lluvia = tasa diaria × días del mes. Días calurosos = días con temperatura máxima igual o mayor al umbral elegido.'>Growing season = June–October (typical rainfed cycle). Earlier period = 1995–2009, recent = 2010–2025. Trend = least-squares line. A “dry season” has rainfall below 85% of the 1995–2025 average. Rainfall = daily rate × days in month. Hot days = days with maximum temperature at or above the chosen threshold.</p>
     <p data-es='Explorador de rotaciones: suministro de agua = 70% de la lluvia de temporada + agua útil del suelo (capacidad de agua del suelo × 0.5 m × humedad de raíces NASA) + riego (limitado = +100 mm). Año seco = lluvia del percentil 20. La presión de calor combina temperatura y calentamiento de la temporada. Los valores de cultivos y suelos son supuestos simplificados e ilustrativos (rangos típicos), para sustituirse con datos locales y asesoría agronómica; no son recomendaciones. Los puntajes se ponderan con las prioridades del agricultor.'>Rotation explorer: water supply = 70% of season rain + usable soil water (soil water capacity × 0.5 m × NASA root-zone wetness) + irrigation (limited = +100 mm). Dry year = 20th-percentile season rain. Heat pressure combines season temperature and warming. Crop and soil values are simplified, illustrative assumptions (typical ranges), meant to be replaced with local data and agronomist input; they are not recommendations. Scores are weighted by the farmer’s priorities.</p>
     <p data-es='Las ventanas del mapa muestran el clima actual de <b>Open-Meteo</b> (no son datos de la NASA). Imágenes satelitales y nombres de lugares: Esri.'>Map popups show current conditions from <b>Open-Meteo</b> (not NASA data). Satellite imagery and place names: Esri.</p>
+    <p data-es='<b>Créditos y referencias:</b> NASA POWER, NASA GIBS, NASA SRTM, NASA MODIS (ORNL DAAC), GPM IMERG; ERA5 (ECMWF) y clima actual vía Open-Meteo; OpenTopoData; imágenes y nombres de lugares de Esri; bibliotecas abiertas Leaflet y Chart.js; CONABIO, CIMMYT y los estudios citados en la pestaña Milpa y suelo. Código e ilustraciones creados con asistencia de IA (Claude, Anthropic), bajo dirección humana.'><b>Credits and references:</b> NASA POWER, NASA GIBS, NASA SRTM, NASA MODIS (ORNL DAAC), GPM IMERG; ERA5 (ECMWF) and current weather via Open-Meteo; OpenTopoData; imagery and place names by Esri; open-source libraries Leaflet and Chart.js; CONABIO, CIMMYT and the studies cited in the Milpa &amp; Soil tab. Code and illustrations created with AI assistance (Claude, Anthropic), under human direction.</p>
     <small data-es='Limitaciones: un punto de malla por región (celdas de unos 0.5° × 0.625°), sin datos de rendimiento ni riego; la humedad del suelo proviene de un modelo. Siguientes pasos: observaciones SMAP de la NASA e índices de vegetación MODIS/Landsat.'>Limitations: one grid point per region (cells of about 0.5° × 0.625°), no yield or irrigation data; soil wetness is model-based. Next steps: NASA SMAP observations and MODIS/Landsat vegetation indices.</small>
   </div>
+
+  <section class="card" data-tab="crops" id="extended-crops">
+    <div class="section-heading"><div><span class="eyebrow dark">CATÁLOGO AGRÍCOLA</span><h2 data-es="Más cultivos para explorar">More crops to explore</h2></div><span class="section-note" data-es="Fichas generales · verifica variedades y fechas localmente">General crop cards · verify varieties and dates locally</span></div>
+    <div class="crop-grid">
+      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3>Avena</h3><i>Avena sativa</i><p data-es="Cereal de clima templado; puede usarse para grano, forraje o cobertura.">Cool-season cereal for grain, forage or cover.</p><small data-es="Revisar: humedad, heladas y fecha de establecimiento.">Check: moisture, frost and planting date.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3>Trigo</h3><i>Triticum aestivum</i><p data-es="Cereal de ciclo fresco; requiere elegir variedad y fecha según altitud y temperatura.">Cool-season cereal; variety and timing depend on elevation and temperature.</p><small data-es="Revisar: disponibilidad de agua y presión de enfermedades.">Check: water availability and disease pressure.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3>Cebada</h3><i>Hordeum vulgare</i><p data-es="Cereal adaptable; el destino puede ser grano, forraje o industria.">Adaptable cereal for grain, forage or processing.</p><small data-es="Revisar: contrato comercial y manejo nutricional.">Check: market contract and nutrient management.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3>Garbanzo</h3><i>Cicer arietinum</i><p data-es="Leguminosa de ciclo fresco; sensible al exceso de humedad en etapas críticas.">Cool-season legume, sensitive to excess moisture at critical stages.</p><small data-es="Revisar: drenaje, variedad y enfermedades.">Check: drainage, variety and diseases.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3>Lenteja</h3><i>Lens culinaris</i><p data-es="Leguminosa de grano; puede diversificar sistemas de temporal en ambientes adecuados.">Grain legume that can diversify rainfed systems in suitable environments.</p><small data-es="Revisar: adaptación regional y mercado.">Check: regional adaptation and market.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🥜</span><h3>Cacahuate</h3><i>Arachis hypogaea</i><p data-es="Leguminosa oleaginosa; requiere suelo suelto y buen drenaje para formar vainas.">Oilseed legume needing loose, well-drained soil for pod development.</p><small data-es="Revisar: textura, calcio y rotación sanitaria.">Check: texture, calcium and disease rotation.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3>Soya</h3><i>Glycine max</i><p data-es="Leguminosa oleaginosa; la inoculación y el manejo del agua son importantes.">Oilseed legume; inoculation and water management matter.</p><small data-es="Revisar: inoculante, fotoperiodo y mercado.">Check: inoculant, photoperiod and market.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌿</span><h3>Alfalfa</h3><i>Medicago sativa</i><p data-es="Forrajera perenne de raíces profundas; necesita establecimiento y agua suficientes.">Deep-rooted perennial forage needing adequate establishment and water.</p><small data-es="Revisar: salinidad, drenaje y disponibilidad de riego.">Check: salinity, drainage and irrigation.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌻</span><h3>Girasol</h3><i>Helianthus annuus</i><p data-es="Oleaginosa de raíz profunda; la respuesta depende de suelo, agua y variedad.">Deep-rooted oilseed; performance depends on soil, water and variety.</p><small data-es="Revisar: polinizadores, aves y mercado.">Check: pollinators, birds and market.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌼</span><h3>Cártamo</h3><i>Carthamus tinctorius</i><p data-es="Oleaginosa adaptada a ambientes semiáridos; necesita establecimiento oportuno.">Oilseed adapted to semi-arid settings; timely establishment is important.</p><small data-es="Revisar: ciclo, heladas y disponibilidad comercial.">Check: cycle, frost and market access.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🎃</span><h3>Calabaza</h3><i>Cucurbita spp.</i><p data-es="Puede integrarse en policultivos como la milpa; cubre parte del suelo.">Can be included in milpa polycultures and cover part of the soil.</p><small data-es="Revisar: espacio, sombra y competencia por agua.">Check: spacing, shade and water competition.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🍅</span><h3>Tomate</h3><i>Solanum lycopersicum</i><p data-es="Hortaliza de alto valor potencial y manejo intensivo de agua y sanidad.">Vegetable with potential value and intensive water and pest management.</p><small data-es="Revisar: sistema de producción, plagas y mercado.">Check: production system, pests and market.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌶️</span><h3>Chile</h3><i>Capsicum annuum</i><p data-es="Hortaliza diversa en variedades; requiere manejo cuidadoso de plagas y agua.">Diverse vegetable crop requiring careful pest and water management.</p><small data-es="Revisar: variedad, sanidad y canal de venta.">Check: variety, crop health and market channel.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌵</span><h3>Agave</h3><i>Agave tequilana</i><p data-es="Cultivo perenne emblemático de Jalisco; su ciclo es largo y requiere planeación territorial.">Iconic perennial crop of Jalisco with a long cycle and land-planning needs.</p><small data-es="Revisar: pendiente, erosión, sanidad y reglas de denominación.">Check: slope, erosion, plant health and designation rules.</small></article>
+    </div>
+    <p class="caution" data-es="Estas fichas son una introducción educativa, no paquetes tecnológicos ni recomendaciones de siembra. Consulta INIFAP y asesores locales para fechas, densidades, variedades y fertilización.">These cards are educational introductions, not technical packages or planting recommendations. Consult INIFAP and local advisors for dates, density, varieties and fertilization.</p>
+  </section>
+
+  <section class="card" data-tab="association" id="association">
+    <div class="section-heading"><div><span class="eyebrow dark">POLICULTIVOS</span><h2 data-es="Asociación de cultivos: diseñar biodiversidad">Crop associations: designing biodiversity</h2></div></div>
+    <div class="association-layout">
+      <div class="assoc-diagram" role="img" aria-label="Diagrama esquemático de milpa con maíz, frijol y calabaza">
+        <div class="assoc-row"><span class="plant maize">Maíz</span><span class="plant bean">Frijol</span><span class="plant maize">Maíz</span></div>
+        <div class="assoc-row"><span class="plant squash">Calabaza</span><span class="plant bean">Frijol</span><span class="plant squash">Calabaza</span></div>
+        <div class="assoc-row"><span class="plant maize">Maíz</span><span class="plant squash">Calabaza</span><span class="plant maize">Maíz</span></div>
+        <small data-es="Esquema conceptual, no plano de siembra a escala.">Conceptual scheme, not a scaled planting plan.</small>
+      </div>
+      <div><h3 data-es="Milpa: complementariedad con manejo">Milpa: complementarity through management</h3>
+        <ul><li data-es="<b>Maíz:</b> estructura vertical y alimento básico."><b>Maize:</b> vertical structure and staple food.</li>
+        <li data-es="<b>Frijol:</b> leguminosa que puede fijar nitrógeno cuando hay nodulación efectiva."><b>Bean:</b> a legume that can fix nitrogen when effective nodulation occurs.</li>
+        <li data-es="<b>Calabaza:</b> follaje que puede sombrear el suelo y reducir evaporación."><b>Squash:</b> foliage can shade soil and reduce evaporation.</li></ul>
+        <p data-es="La asociación no elimina la competencia. La densidad, variedad, fechas, disponibilidad de agua y fertilidad determinan si las especies se complementan o compiten por luz, nutrientes y humedad.">Intercropping does not eliminate competition. Density, variety, timing, water availability and fertility determine whether species complement or compete for light, nutrients and moisture.</p>
+      </div>
+    </div>
+    <div class="mini-columns"><article><b data-es="Asociación">Association</b><p data-es="Dos o más cultivos crecen simultáneamente en la misma parcela.">Two or more crops grow simultaneously in the same field.</p></article><article><b data-es="Rotación">Rotation</b><p data-es="Los cultivos se suceden en el tiempo, ciclo tras ciclo.">Crops follow one another over time, season after season.</p></article><article><b data-es="Validación">Validation</b><p data-es="Ajustar surcos y densidades con experiencia local y ensayos pequeños.">Adjust rows and density using local experience and small trials.</p></article></div>
+  </section>
+
+  <section class="card" data-tab="milpa" id="soil-science">
+    <div class="section-heading"><div><span class="eyebrow dark">SUELO · BASE DE LA PRODUCCIÓN</span><h2 data-es="Conoce el perfil y la salud de tu suelo">Understand your soil profile and soil health</h2></div></div>
+    <div class="soil-layout">
+      <div class="soil-profile" role="img" aria-label="Diagrama educativo de capas del suelo">
+        <div class="soil-layer topsoil"><b>Horizonte A</b><span data-es="Materia orgánica y raíces">Organic matter and roots</span></div>
+        <div class="soil-layer subsoil"><b>Horizonte B</b><span data-es="Acumulación de arcillas y minerales">Clay and mineral accumulation</span></div>
+        <div class="soil-layer parent"><b>Horizonte C</b><span data-es="Material parental meteorizado">Weathered parent material</span></div>
+        <div class="soil-layer rock"><b>Roca</b><span data-es="Material consolidado">Consolidated material</span></div>
+      </div>
+      <div class="soil-topics">
+        <article><b>pH</b><p data-es="Influye en la disponibilidad de nutrientes; medir antes de corregir.">Influences nutrient availability; measure before amending.</p></article>
+        <article><b>N · P · K</b><p data-es="Nitrógeno, fósforo y potasio cumplen funciones distintas; ajustar con análisis.">Nitrogen, phosphorus and potassium have distinct roles; adjust using soil tests.</p></article>
+        <article><b>Materia orgánica</b><p data-es="Favorece agregación, actividad biológica y retención de agua.">Supports aggregation, biological activity and water retention.</p></article>
+        <article><b>Erosión y compactación</b><p data-es="Cobertura, raíces y tránsito controlado ayudan a proteger la estructura.">Cover, roots and controlled traffic help protect structure.</p></article>
+      </div>
+    </div>
+    <p class="caution" data-es="Un color o una imagen no sustituyen un análisis de laboratorio. Para diagnosticar fertilidad, salinidad o deficiencias, toma muestras representativas y consulta un laboratorio o asesor agronómico.">Color or imagery cannot replace laboratory analysis. For fertility, salinity or deficiency diagnosis, take representative samples and consult a laboratory or agronomist.</p>
+  </section>
+
+  <section class="card" data-tab="techniques" id="techniques">
+    <div class="section-heading"><div><span class="eyebrow dark">MANEJO SOSTENIBLE</span><h2 data-es="Prácticas para conservar los recursos">Practices to conserve resources</h2></div></div>
+    <div class="practice-grid">
+      <article><span>01</span><h3 data-es="Compostaje">Composting</h3><p data-es="Mezcla residuos ricos en carbono y nitrógeno, conserva humedad y airea la pila. El compost maduro debe oler a tierra.">Mix carbon- and nitrogen-rich residues, maintain moisture and aerate the pile. Mature compost should smell earthy.</p></article>
+      <article><span>02</span><h3 data-es="Cultivos de cobertura">Cover crops</h3><p data-es="Mantienen el suelo protegido entre ciclos; elige especies y fecha de terminación según agua disponible.">Protect soil between cycles; choose species and termination timing based on water availability.</p></article>
+      <article><span>03</span><h3 data-es="Labranza de conservación">Conservation tillage</h3><p data-es="Reduce la perturbación y conserva residuos en superficie; requiere manejo de malezas y equipo apropiado.">Reduces disturbance and keeps residues on the surface; requires weed management and suitable equipment.</p></article>
+      <article><span>04</span><h3 data-es="Barreras vivas y terrazas">Living barriers and terraces</h3><p data-es="Pueden reducir escorrentía en pendientes; su diseño debe responder al relieve y al flujo del agua.">Can reduce runoff on slopes; design must reflect terrain and water flow.</p></article>
+      <article><span>05</span><h3 data-es="Manejo integrado de plagas">Integrated pest management</h3><p data-es="Monitorea, identifica correctamente y combina prevención, control biológico y medidas selectivas.">Monitor, identify accurately and combine prevention, biological control and selective measures.</p></article>
+      <article><span>06</span><h3 data-es="Residuos agrícolas">Agricultural residues</h3><p data-es="Retener o incorporar residuos puede aportar carbono; evita quemas y considera plagas, humedad y operación.">Retaining or incorporating residues can add carbon; avoid burning and consider pests, moisture and operations.</p></article>
+    </div>
+  </section>
+
+  <section class="card" data-tab="climate" id="water-climate">
+    <div class="section-heading"><div><span class="eyebrow dark">AGUA Y CLIMA</span><h2 data-es="Usar el agua con criterio">Use water thoughtfully</h2></div></div>
+    <div class="water-grid">
+      <article><div class="water-icon">滴</div><h3 data-es="Goteo">Drip irrigation</h3><p data-es="Entrega agua cerca de la zona radicular; requiere filtración, mantenimiento y diseño adecuado.">Delivers water near roots; requires filtration, maintenance and sound design.</p></article>
+      <article><div class="water-icon">≈</div><h3 data-es="Aspersión">Sprinkler</h3><p data-es="Distribuye agua mediante presión; viento, evaporación y uniformidad afectan su eficiencia.">Distributes pressurized water; wind, evaporation and uniformity affect efficiency.</p></article>
+      <article><div class="water-icon">▤</div><h3 data-es="Captación de lluvia">Rainwater harvesting</h3><p data-es="Canaliza escurrimientos a almacenamiento o infiltración, con control de sedimentos y seguridad.">Channels runoff to storage or infiltration, with sediment control and safety.</p></article>
+    </div>
+    <p data-es="El explorador climático existente utiliza datos de NASA POWER para puntos regionales y permite explorar otras coordenadas en el mapa. Son datos de rejilla/modelo: no equivalen a una medición en tu parcela.">The existing climate explorer uses NASA POWER data for regional points and lets you explore other coordinates on the map. These are gridded/model data, not measurements from your specific field.</p>
+  </section>
+
+  <section class="card" data-tab="assistant" id="assistant">
+    <div class="section-heading"><div><span class="eyebrow dark">ASISTENTE AGRÍCOLA</span><h2 data-es="Cuéntanos sobre tu parcela">Tell us about your farm</h2></div><span class="section-note" data-es="Orientación inicial · no sustituye asesoría técnica">Initial guidance · not a substitute for technical advice</span></div>
+    <form id="farm-form" class="farm-form">
+      <label><span data-es="Ubicación (municipio o localidad)">Location (municipality or town)</span><input id="farm-location" required placeholder="Ej. Tepatitlán, Jalisco"></label>
+      <label><span data-es="Superficie (hectáreas)">Area (hectares)</span><input id="farm-area" type="number" min="0.01" step="0.01" required placeholder="Ej. 5"></label>
+      <label><span data-es="Cultivo anterior">Previous crop</span><select id="farm-prev"><option value="maiz" data-es="Maíz">Maize</option><option value="frijol" data-es="Frijol">Bean</option><option value="sorgo" data-es="Sorgo">Sorghum</option><option value="avena" data-es="Avena">Oats</option><option value="otro" data-es="Otro / no sé">Other / unknown</option></select></label>
+      <label><span data-es="Tipo de suelo">Soil type</span><select id="farm-soil"><option value="franco" data-es="Franco">Loam</option><option value="arenoso" data-es="Arenoso">Sandy</option><option value="arcilloso" data-es="Arcilloso">Clay</option><option value="desconocido" data-es="No lo conozco">Unknown</option></select></label>
+      <label><span data-es="Disponibilidad de agua">Water availability</span><select id="farm-water"><option value="temporal" data-es="Temporal / lluvia">Rainfed</option><option value="limitado" data-es="Riego limitado">Limited irrigation</option><option value="riego" data-es="Riego disponible">Irrigation available</option></select></label>
+      <label><span data-es="Temporada">Season</span><select id="farm-season"><option value="lluvias" data-es="Primavera-verano / lluvias">Spring-summer / rainy</option><option value="otono" data-es="Otoño-invierno">Autumn-winter</option><option value="desconocida" data-es="Por definir">To be defined</option></select></label>
+      <label class="full"><span data-es="Objetivo principal">Main goal</span><select id="farm-goal"><option value="suelo" data-es="Mejorar suelo y fertilidad">Improve soil and fertility</option><option value="agua" data-es="Reducir riesgo por falta de agua">Reduce water-shortage risk</option><option value="diversificar" data-es="Diversificar cultivos e ingresos">Diversify crops and income</option><option value="costos" data-es="Reducir costos de insumos">Reduce input costs</option></select></label>
+      <button class="action primary full" type="submit" data-es="Generar orientación inicial">Generate initial guidance</button>
+    </form>
+    <div id="farm-result" class="farm-result" aria-live="polite"><p data-es="Completa los datos para recibir alternativas razonadas y los puntos que conviene verificar.">Complete the form to receive reasoned options and points to verify.</p></div>
+  </section>
+
+  <section class="card" data-tab="calendar" id="calendar">
+    <div class="section-heading"><div><span class="eyebrow dark">PLANIFICACIÓN</span><h2 data-es="Calendario agrícola orientativo">Indicative agricultural calendar</h2></div></div>
+    <div class="calendar-grid">
+      <article><b>ENE – FEB</b><p data-es="Revisar análisis de suelo, planear compras, reparar equipos y definir rotaciones.">Review soil tests, plan purchases, repair equipment and define rotations.</p></article>
+      <article><b>MAR – MAY</b><p data-es="Preparar conservación de humedad, revisar semillas y monitorear pronósticos estacionales.">Prepare moisture conservation, check seed and monitor seasonal outlooks.</p></article>
+      <article><b>JUN – JUL</b><p data-es="Con el inicio de lluvias, verificar humedad y oportunidad de siembra según región.">With the onset of rains, check moisture and planting windows by region.</p></article>
+      <article><b>AGO – OCT</b><p data-es="Monitorear malezas, plagas, nutrición y etapas sensibles del cultivo.">Monitor weeds, pests, nutrition and sensitive crop stages.</p></article>
+      <article><b>NOV – DIC</b><p data-es="Planear cosecha, manejo de residuos y cultivos de cobertura según disponibilidad de agua.">Plan harvest, residue management and cover crops according to water availability.</p></article>
+    </div>
+    <p class="caution" data-es="Las ventanas varían por altitud, región, variedad, humedad y sistema de producción. Este calendario no es una fecha de siembra oficial.">Windows vary by elevation, region, variety, moisture and production system. This is not an official planting-date calendar.</p>
+  </section>
+
+  <section class="card" data-tab="library" id="library">
+    <div class="section-heading"><div><span class="eyebrow dark">BIBLIOTECA EDUCATIVA</span><h2 data-es="Aprender para decidir mejor">Learn to make better decisions</h2></div></div>
+    <div class="library-grid">
+      <a href="https://www.gob.mx/inifap" target="_blank" rel="noopener"><b>INIFAP</b><span data-es="Paquetes tecnológicos, investigación y recomendaciones regionales.">Technical packages, research and regional recommendations.</span></a>
+      <a href="https://www.fao.org/conservation-agriculture/es/" target="_blank" rel="noopener"><b>FAO</b><span data-es="Agricultura de conservación, suelo y manejo sostenible.">Conservation agriculture, soil and sustainable management.</span></a>
+      <a href="https://www.gob.mx/agricultura" target="_blank" rel="noopener"><b>SADER</b><span data-es="Información y programas del sector agroalimentario mexicano.">Information and programs for Mexico’s agri-food sector.</span></a>
+      <a href="https://www.earthdata.nasa.gov/" target="_blank" rel="noopener"><b>NASA Earthdata</b><span data-es="Datos satelitales, productos y documentación científica.">Satellite data, products and scientific documentation.</span></a>
+      <a href="https://www.biodiversidad.gob.mx/diversidad/sistemas-productivos/milpa" target="_blank" rel="noopener"><b>CONABIO · Milpa</b><span data-es="Biodiversidad y sistemas agrícolas tradicionales.">Biodiversity and traditional farming systems.</span></a>
+      <a href="https://www.cimmyt.org/es/" target="_blank" rel="noopener"><b>CIMMYT</b><span data-es="Investigación en maíz, trigo y sistemas agroalimentarios.">Research on maize, wheat and agri-food systems.</span></a>
+    </div>
+  </section>
+
 </main>
-<footer data-es='Equipo Space Tapatíos · NASA Space Apps Challenge 2026 · Field Shift: Adapting Farms with NASA Data' style="max-width:1100px;margin:auto;padding:0 20px 28px">Team Space Tapatíos · 2026 NASA Space Apps Challenge · Field Shift: Adapting Farms with NASA Data</footer>
+<footer data-es='Equipo Space Tapatíos · NASA Space Apps Challenge 2026 · Field Shift: Adapting Farms with NASA Data · Código e ilustraciones creados con asistencia de IA (Claude, Anthropic), bajo dirección humana.' style="max-width:1100px;margin:auto;padding:0 20px 28px">Team Space Tapatíos · 2026 NASA Space Apps Challenge · Field Shift: Adapting Farms with NASA Data · Code and illustrations created with AI assistance (Claude, Anthropic), under human direction.</footer>
 
 <script>
-const ZONES=[
- {n:"Jalisco · Los Altos – Tepatitlán",lat:20.81,lon:-102.76},{n:"Jalisco · North – Lagos de Moreno",lat:21.36,lon:-101.93},
- {n:"Jalisco · Ciénega – Ocotlán",lat:20.35,lon:-102.77},{n:"Jalisco · Valles – Ameca",lat:20.55,lon:-104.05},
- {n:"Jalisco · South – Ciudad Guzmán",lat:19.70,lon:-103.46},{n:"Jalisco · Center – Zapopan",lat:20.72,lon:-103.39},
- {n:"Jalisco · Sierra de Amula – Autlán",lat:19.77,lon:-104.37},{n:"Jalisco · Far North – Colotlán",lat:22.11,lon:-103.26},{n:"Aguascalientes",lat:21.88,lon:-102.3},{n:"Baja California · Mexicali",lat:32.66,lon:-115.47},{n:"Baja California Sur · Ciudad Constitución",lat:25.03,lon:-111.67},{n:"Campeche · Hopelchén",lat:19.75,lon:-89.85},{n:"Chiapas · Villaflores",lat:16.23,lon:-93.27},{n:"Chihuahua · Cuauhtémoc",lat:28.41,lon:-106.87},{n:"Coahuila · Torreón",lat:25.54,lon:-103.41},{n:"Colima",lat:19.24,lon:-103.72},{n:"Durango · Guadalupe Victoria",lat:24.45,lon:-104.11},{n:"Estado de México · Toluca",lat:19.29,lon:-99.65},{n:"Guanajuato · Celaya",lat:20.52,lon:-100.81},{n:"Guerrero · Iguala",lat:18.35,lon:-99.54},{n:"Hidalgo · Tulancingo",lat:20.08,lon:-98.37},{n:"Michoacán · Zamora",lat:19.99,lon:-102.28},{n:"Morelos · Cuautla",lat:18.81,lon:-98.95},{n:"Nayarit · Tepic",lat:21.5,lon:-104.89},{n:"Nuevo León · Linares",lat:24.86,lon:-99.57},{n:"Oaxaca · Valles Centrales",lat:17.06,lon:-96.72},{n:"Puebla · Tecamachalco",lat:18.88,lon:-97.73},{n:"Querétaro · San Juan del Río",lat:20.39,lon:-99.99},{n:"Quintana Roo · Felipe Carrillo Puerto",lat:19.58,lon:-88.05},{n:"San Luis Potosí · Rioverde",lat:21.93,lon:-99.99},{n:"Sinaloa · Culiacán",lat:24.8,lon:-107.39},{n:"Sonora · Ciudad Obregón",lat:27.49,lon:-109.94},{n:"Tabasco · Villahermosa",lat:17.99,lon:-92.93},{n:"Tamaulipas · Río Bravo",lat:25.6,lon:-98.1},{n:"Tlaxcala · Huamantla",lat:19.31,lon:-97.92},{n:"Veracruz · Cosamaloapan",lat:18.37,lon:-95.8},{n:"Yucatán · Tizimín",lat:21.14,lon:-88.15},{n:"Zacatecas · Fresnillo",lat:23.17,lon:-102.87}];
+const ZONES=[{n:"Jalisco · Los Altos – Tepatitlán",lat:20.81,lon:-102.76},{n:"Jalisco · North – Lagos de Moreno",lat:21.36,lon:-101.93},{n:"Jalisco · Ciénega – Ocotlán",lat:20.35,lon:-102.77},{n:"Jalisco · Valles – Ameca",lat:20.55,lon:-104.05},{n:"Jalisco · South – Ciudad Guzmán",lat:19.7,lon:-103.46},{n:"Jalisco · Center – Zapopan",lat:20.72,lon:-103.39},{n:"Jalisco · Sierra de Amula – Autlán",lat:19.77,lon:-104.37},{n:"Jalisco · Far North – Colotlán",lat:22.11,lon:-103.26},{n:"Aguascalientes",lat:21.88,lon:-102.3},{n:"Baja California · Mexicali",lat:32.66,lon:-115.47},{n:"Baja California Sur · Ciudad Constitución",lat:25.03,lon:-111.67},{n:"Campeche · Hopelchén",lat:19.75,lon:-89.85},{n:"Chiapas · Villaflores",lat:16.23,lon:-93.27},{n:"Chihuahua · Cuauhtémoc",lat:28.41,lon:-106.87},{n:"Coahuila · Torreón",lat:25.54,lon:-103.41},{n:"Colima",lat:19.24,lon:-103.72},{n:"Durango · Guadalupe Victoria",lat:24.45,lon:-104.11},{n:"Estado de México · Toluca",lat:19.29,lon:-99.65},{n:"Guanajuato · Celaya",lat:20.52,lon:-100.81},{n:"Guerrero · Iguala",lat:18.35,lon:-99.54},{n:"Hidalgo · Tulancingo",lat:20.08,lon:-98.37},{n:"Michoacán · Zamora",lat:19.99,lon:-102.28},{n:"Morelos · Cuautla",lat:18.81,lon:-98.95},{n:"Nayarit · Tepic",lat:21.5,lon:-104.89},{n:"Nuevo León · Linares",lat:24.86,lon:-99.57},{n:"Oaxaca · Valles Centrales",lat:17.06,lon:-96.72},{n:"Puebla · Tecamachalco",lat:18.88,lon:-97.73},{n:"Querétaro · San Juan del Río",lat:20.39,lon:-99.99},{n:"Quintana Roo · Felipe Carrillo Puerto",lat:19.58,lon:-88.05},{n:"San Luis Potosí · Rioverde",lat:21.93,lon:-99.99},{n:"Sinaloa · Culiacán",lat:24.8,lon:-107.39},{n:"Sonora · Ciudad Obregón",lat:27.49,lon:-109.94},{n:"Tabasco · Villahermosa",lat:17.99,lon:-92.93},{n:"Tamaulipas · Río Bravo",lat:25.6,lon:-98.1},{n:"Tlaxcala · Huamantla",lat:19.31,lon:-97.92},{n:"Veracruz · Cosamaloapan",lat:18.37,lon:-95.8},{n:"Yucatán · Tizimín",lat:21.14,lon:-88.15},{n:"Zacatecas · Fresnillo",lat:23.17,lon:-102.87}];
 const Y0=1995,Y1=2025,SPLIT=2010,MS=[6,7,8,9,10],MN=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct"];
 const sum=a=>a.reduce((s,v)=>s+v,0),mean=a=>sum(a)/a.length,sd=a=>{const m=mean(a);return Math.sqrt(mean(a.map(v=>(v-m)**2)))};
 const dim=(y,m)=>new Date(y,m,0).getDate();
@@ -126,7 +398,7 @@ async function fetchZone(z){
 const color=dT=>dT<.3?'#4a90e2':dT<.7?'#f5c542':'#e0701b';
 
 const WX={0:['Clear sky','☀️'],1:['Mostly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],45:['Fog','🌫️'],48:['Fog','🌫️'],51:['Light drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],80:['Rain showers','🌦️'],81:['Rain showers','🌧️'],82:['Violent showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm with hail','⛈️'],99:['Thunderstorm with hail','⛈️']};
-let lang='en',lastSt=['Loading NASA data…',{}];
+let lang='es',lastSt=['Loading NASA data…',{}];
 const ES={'Maize monoculture':'Maíz continuo','Maize–Bean':'Maíz–Frijol','Maize–Maize–Bean':'Maíz–Maíz–Frijol','Maize–Sorghum':'Maíz–Sorgo','Maize–Bean–Sorghum':'Maíz–Frijol–Sorgo','Maize–Bean + cover crop':'Maíz–Frijol + cultivo de cobertura','Water':'Agua','Heat':'Calor','Soil':'Suelo','Income':'Ingreso','Low cost':'Bajo costo',
 '<b>Top pick:</b> {n} ({s}/100), {d} points above continuous maize.':'<b>Mejor opción:</b> {n} ({s}/100), {d} puntos sobre el maíz continuo.',
 'In a dry year ({r} mm of rain) this rotation covers {c}% of crop water needs; continuous maize covers {m}%.':'En un año seco ({r} mm de lluvia) esta rotación cubre {c}% de las necesidades de agua; el maíz continuo cubre {m}%.',
@@ -152,7 +424,7 @@ const ES={'Maize monoculture':'Maíz continuo','Maize–Bean':'Maíz–Frijol','
 'Clear sky':'Despejado','Mostly clear':'Mayormente despejado','Partly cloudy':'Parcialmente nublado','Overcast':'Nublado','Fog':'Niebla','Light drizzle':'Llovizna ligera','Drizzle':'Llovizna','Heavy drizzle':'Llovizna fuerte','Light rain':'Lluvia ligera','Heavy rain':'Lluvia fuerte','Rain showers':'Chubascos','Violent showers':'Chubascos fuertes','Thunderstorm':'Tormenta eléctrica','Thunderstorm with hail':'Tormenta con granizo','Variable conditions':'Condiciones variables'};
 const T=(k,o={})=>((lang==='es'&&ES[k])||k).replace(/\{(\w+)\}/g,(m,n)=>o[n]!==undefined?o[n]:m);
 function setStatus(k,o,e){lastSt=[k,o,e];st.style.color=e?'#d33':'var(--mut)';st.textContent=T(k,o)}
-function applyLang(){document.documentElement.lang=lang;document.querySelectorAll('[data-es]').forEach(el=>{if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;el.innerHTML=lang==='es'?el.dataset.es:el.dataset.en});document.getElementById('lang').textContent=lang==='es'?'EN':'ES';setStatus(...lastSt)}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll('[data-es]').forEach(el=>{if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;el.innerHTML=lang==='es'?el.dataset.es:el.dataset.en});document.getElementById('lang').textContent=lang==='es'?'EN':'ES';setStatus(...lastSt);applyView();renderHero();renderCat()}
 document.getElementById('lang').onclick=()=>{lang=lang==='es'?'en':'es';applyLang();if(ZONES[cur]&&ZONES[cur].s)show(cur)};
 
 function infoBase(z){const s=z.s,sg=v=>(v>=0?'+':'')+v;
@@ -204,6 +476,60 @@ function renderRot(z){
 }
 ['soil','irr','p_w','p_s','p_i','p_r','p_c'].forEach(id=>{const e=document.getElementById(id);['input','change'].forEach(v=>e.addEventListener(v,()=>renderRot(ZONES[cur])))});
 /*ENDROT*/
+
+
+/*VIEW*/
+let tab='home';const sq=document.getElementById('sq');
+const norm=x=>x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function applyView(){
+  const q=norm(sq.value.trim()),units=[...document.querySelectorAll('main .card,#kpis')].filter(e=>e.dataset.tab!=='all');
+  document.querySelectorAll('main [data-tab]').forEach(e=>{if(e.dataset.tab!=='all')e.style.display=(q||e.dataset.tab.split(' ').includes(tab))?'':'none'});
+  let n=0;
+  units.forEach(e=>{if(q){const h=norm(e.textContent).includes(q);e.style.display=h?'':'none';n+=h}else if(!e.dataset.tab)e.style.display=''});
+  document.getElementById('nores').style.display=q&&!n?'':'none';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',!q&&b.dataset.t===tab));
+  sq.placeholder=lang==='es'?'Buscar en MaizeShift… (ej. frijol, suelo, rotación)':'Search MaizeShift… (e.g. bean, soil, rotation)';
+  setTimeout(()=>{try{map&&map.invalidateSize();Object.values(chs).forEach(c=>c.resize())}catch(e){}},60);
+}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{tab=b.dataset.t;sq.value='';applyView()});
+sq.addEventListener('input',applyView);
+/*ENDVIEW*/
+/*HOME*/
+const X=a=>a[lang==='es'?1:0];
+const LB={soil:['Soil','Suelo','🌱'],water:['Water','Agua','💧'],clim:['Climate','Clima','🌡️'],seas:['Sowing season','Temporada de siembra','📅'],cyc:['Cycle','Ciclo','⏱️'],ben:['Soil effect','Efecto en el suelo','🪱'],pest:['Common problems','Problemas comunes','🐛'],comp:['Companions','Compatibles','🤝'],next:['Next season options','Opciones siguiente temporada','🔄']};
+const CR=[
+{k:'M',n:['Maize','Maíz'],sci:'Zea mays',g:'cereal',f:{soil:['Deep, well-drained loam; avoid waterlogging.','Franco profundo y bien drenado; evitar encharcamiento.'],water:['Moderate to high, roughly 500–800 mm per cycle; sensitive to drought at flowering.','Moderada a alta, unos 500–800 mm por ciclo; sensible a sequía en floración.'],clim:['Warm; best growth roughly 18–27 °C.','Cálido; mejor crecimiento entre 18 y 27 °C aprox.'],seas:['Rainfed: start of the rainy season (about June–July).','Temporal: inicio de lluvias (junio–julio aprox.).'],cyc:['About 4–6 months, depending on variety.','Unos 4–6 meses según la variedad.'],ben:['Residues add organic matter; demands nitrogen.','Los residuos aportan materia orgánica; demanda nitrógeno.'],pest:['Fall armyworm, drought at flowering, soil decline under long monoculture.','Gusano cogollero, sequía en floración, deterioro del suelo con monocultivo prolongado.'],comp:['Bean, squash (milpa).','Frijol, calabaza (milpa).'],next:['Legumes such as bean (verify locally).','Leguminosas como el frijol (verificar localmente).']}},
+{k:'B',n:['Common bean','Frijol'],sci:'Phaseolus vulgaris',g:'legume',f:{soil:['Well-drained loam; sensitive to waterlogging and salinity.','Franco bien drenado; sensible al encharcamiento y la salinidad.'],water:['Moderate, roughly 300–400 mm; sensitive to drought at flowering and pod fill.','Moderada, unos 300–400 mm; sensible a sequía en floración y llenado de vaina.'],clim:['Mild to warm; sensitive to frost and extreme heat.','Templado a cálido; sensible a heladas y calor extremo.'],seas:['Rainfed: rainy season (about June–July).','Temporal: época de lluvias (junio–julio aprox.).'],cyc:['About 3–4 months.','Unos 3–4 meses.'],ben:['Legume: fixes nitrogen with root bacteria; can benefit the next crop.','Leguminosa: fija nitrógeno con bacterias de la raíz; puede beneficiar al cultivo siguiente.'],pest:['Fungal diseases in humid conditions; drought and heat stress.','Enfermedades por hongos con humedad; estrés por sequía y calor.'],comp:['Maize, squash (milpa).','Maíz, calabaza (milpa).'],next:['Cereals such as maize or sorghum.','Cereales como maíz o sorgo.']}},
+{k:'S',n:['Sorghum','Sorgo'],sci:'Sorghum bicolor',g:'cereal',f:{soil:['Adapts to many soils, including drier ones; avoid heavy waterlogging.','Se adapta a muchos suelos, incluso más secos; evitar encharcamiento fuerte.'],water:['Lower than maize, roughly 400–500 mm; drought tolerant.','Menor que el maíz, unos 400–500 mm; tolerante a sequía.'],clim:['Warm to hot; heat tolerant.','Cálido a caluroso; tolerante al calor.'],seas:['Rainfed: rainy season.','Temporal: época de lluvias.'],cyc:['About 4–5 months.','Unos 4–5 meses.'],ben:['Deep roots and biomass residues; not a legume.','Raíces profundas y residuos de biomasa; no es leguminosa.'],pest:['Sugarcane aphid; bird damage at grain fill.','Pulgón amarillo; daño de aves en llenado de grano.'],comp:['Usually grown alone; alternates well with legumes.','Suele sembrarse solo; alterna bien con leguminosas.'],next:['Legumes such as bean.','Leguminosas como el frijol.']}}];
+function scene(k){
+  let o='<svg viewBox="0 0 400 200" style="width:100%;border-radius:12px" role="img"><rect width="400" height="200" fill="#cfe8ff"/><circle cx="350" cy="35" r="18" fill="#ffd166"/>';
+  if(k==='T'){o+='<rect y="60" width="400" height="140" fill="#6b4423"/><rect y="60" width="400" height="38" fill="#3d2a17"/><rect y="150" width="400" height="50" fill="#a07850"/><path d="M60 20q8 14 0 20q-8-6 0-20M200 30q8 14 0 20q-8-6 0-20M310 25q8 14 0 20q-8-6 0-20" fill="#4ea8de"/><g fill="#fff" font-size="13" font-family="sans-serif"><text x="12" y="84">'+X(['Organic matter','Materia orgánica'])+'</text><text x="12" y="128">'+X(['Topsoil','Capa fértil'])+'</text><text x="12" y="180">'+X(['Subsoil','Subsuelo'])+'</text></g>'}
+  else{o+='<rect y="130" width="400" height="70" fill="#7a5230"/>';
+    for(let i=0;i<9;i++){const x=25+i*44;
+      if(k==='M')o+=`<path d="M${x} 130V45" stroke="#2d6a4f" stroke-width="5"/><path d="M${x} 90q22-22 34-14M${x} 70q-22-22-34-14" stroke="#40916c" stroke-width="4" fill="none"/><ellipse cx="${x+6}" cy="86" rx="4" ry="9" fill="#ffd166"/>`;
+      if(k==='B')o+=`<circle cx="${x}" cy="118" r="14" fill="#52b788"/><circle cx="${x+10}" cy="124" r="10" fill="#74c69d"/>`;
+      if(k==='S')o+=`<path d="M${x} 130V60" stroke="#2d6a4f" stroke-width="4"/><ellipse cx="${x}" cy="52" rx="9" ry="14" fill="#b5651d"/>`}}
+  return o+'<text x="8" y="194" font-size="9" fill="#fff" opacity=".9" font-family="sans-serif">AI-generated illustration</text></svg>'}
+let si=0,paused=false;
+function renderHero(){
+  const k=['M','B','S','T'][si],c=CR.find(x=>x.k===k);let h;
+  if(c)h=`<h2 style="font-size:24px;margin:0">${X(c.n)}</h2><small><i>${c.sci}</i></small><ul style="list-style:none;padding:0">${['soil','water','seas'].map(f=>`<li>${LB[f][2]} <b>${X(LB[f])}:</b> ${X(c.f[f])}</li>`).join('')}</ul>`;
+  else h=`<h2 style="font-size:24px;margin:0">${X(['Living soil','Suelo vivo'])}</h2><p>${X(['Organic matter helps soil hold water and nutrients. Covered, diversified soil is better protected from erosion.','La materia orgánica ayuda al suelo a retener agua y nutrientes. Un suelo cubierto y diversificado está más protegido de la erosión.'])}</p>`;
+  document.getElementById('slide').innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:center">${scene(k)}<div>${h}</div></div>`;
+  document.getElementById('dots').innerHTML=['‹','•','•','•','•','›'].map((d,i)=>`<button class="chip${i>0&&i<5&&i-1===si?' on':''}" data-d="${i}">${d}</button>`).join('');
+  document.querySelectorAll('#dots [data-d]').forEach(b=>b.onclick=()=>{const i=+b.dataset.d;si=i===0?(si+3)%4:i===5?(si+1)%4:i-1;renderHero()});
+}
+const hero=document.getElementById('hero');hero.onmouseenter=()=>paused=true;hero.onmouseleave=()=>paused=false;
+setInterval(()=>{if(!paused&&tab==='home'){si=(si+1)%4;renderHero()}},5000);
+let flt='all';
+function renderCat(){
+  document.getElementById('chips').innerHTML=[['all',['All','Todos']],['cereal',['Cereals','Cereales']],['legume',['Legumes','Leguminosas']]].map(([v,l])=>`<button class="chip${flt===v?' on':''}" data-f="${v}">${X(l)}</button>`).join('');
+  document.querySelectorAll('#chips [data-f]').forEach(b=>b.onclick=()=>{flt=b.dataset.f;renderCat()});
+  document.getElementById('cat').innerHTML=CR.filter(c=>flt==='all'||c.g===flt).map(c=>`<div class="cc"><h3 style="margin:0">${X(c.n)}</h3><small><i>${c.sci}</i></small><dl>${Object.keys(LB).map(f=>`<dt>${LB[f][2]} ${X(LB[f])}</dt><dd>${X(c.f[f])}</dd>`).join('')}</dl></div>`).join('');
+}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;sq.value='';applyView();window.scrollTo(0,0)});
+/*ENDHOME*/
+
 
 // ---- hot days (daily NASA POWER, loaded on demand) ----
 async function loadHot(z){
@@ -313,12 +639,12 @@ function show(i){
   document.getElementById('advice').innerHTML='<ul>'+a.map(x=>`<li>${x}</li>`).join('')+'</ul>';
   renderRot(z);z.hr?drawHot(z):(drawHot(z),loadHot(z));z.soil||z.sfail?drawSoil(z):(drawSoil(z),loadSoil(z));
 }
-init();
+applyView();renderHero();renderCat();init();
 </script>
 <script>
-/* MaizeShift extras */
+/* MaizeShift extras (fixed: helper renamed Lg so Leaflet L is not shadowed) */
 (()=>{
-const $=id=>document.getElementById(id),L=(a,b)=>lang==='es'?b:a,SC={r:0,t:0},NY=2024;
+const $=id=>document.getElementById(id),Lg=(a,b)=>lang==='es'?b:a,SC={r:0,t:0},NY=2024,LF=window.L;
 const B=(tag,en,es,at='')=>`<${tag} ${at} data-es="${es}">${en}</${tag}>`;
 const TX={
 'Maize monoculture':['Familiar management and machinery; no new market or know-how needed.','Manejo y maquinaria conocidos; no requiere nuevo mercado ni conocimientos.','Pest and disease build-up, nutrient mining, little residue diversity; highest exposure to a dry or hot season.','Acumulación de plagas y enfermedades, extracción de nutrientes, poca diversidad de residuos; mayor exposición a temporadas secas o calurosas.'],
@@ -327,41 +653,37 @@ const TX={
 'Maize–Sorghum':['Sorghum tolerates heat and drought, needs less water and its deep roots help infiltration.','El sorgo tolera calor y sequía, necesita menos agua y sus raíces profundas ayudan a la infiltración.','Lower income; a local market for sorghum (grain or forage) must be confirmed; no nitrogen fixation.','Menor ingreso; hay que confirmar mercado local para sorgo (grano o forraje); no fija nitrógeno.'],
 'Maize–Bean–Sorghum':['Three-crop diversity: legume nitrogen, heat-tolerant sorghum and strong pest-cycle disruption.','Diversidad de tres cultivos: nitrógeno de leguminosa, sorgo tolerante al calor y fuerte ruptura de ciclos de plagas.','More complex planning, machinery and labor; each crop needs its own market and calendar.','Planeación, maquinaria y mano de obra más complejas; cada cultivo requiere su mercado y calendario.'],
 'Maize–Bean + cover crop':['Covers soil in bare periods, reduces erosion and runoff and builds organic matter.','Cubre el suelo en periodos desnudos, reduce erosión y escurrimiento y aumenta materia orgánica.','Cover crop may compete for water in dry years and adds seed and termination costs; timing must be validated locally.','El cultivo de cobertura puede competir por agua en años secos y añade costos de semilla y terminación; el momento debe validarse localmente.']};
-
-// ---------- static sections ----------
 const main=document.querySelector('main');
-main.insertAdjacentHTML('afterbegin',`<div class="card" style="border-left:5px solid var(--warm)">${B('b','This tool supports decisions; it does not replace the farmer or local agronomic expertise. Results are patterns and possibilities, not recommendations.','Esta herramienta apoya decisiones; no reemplaza al agricultor ni a la asesoría agronómica local. Los resultados son patrones y posibilidades, no recomendaciones.')}</div>`);
-const cn=(id,h)=>`<div class="cb"><canvas id="${id}"></canvas></div>`;
+main.insertAdjacentHTML('afterbegin',`<div class="card" data-tab="all" style="border-left:5px solid var(--warm)">${B('b','This tool supports decisions; it does not replace the farmer or local agronomic expertise. Results are patterns and possibilities, not recommendations.','Esta herramienta apoya decisiones; no reemplaza al agricultor ni a la asesoría agronómica local. Los resultados son patrones y posibilidades, no recomendaciones.')}</div>`);
+const cn=id=>`<div class="cb"><canvas id="${id}"></canvas></div>`;
 $('rot').insertAdjacentHTML('afterend',
-`<div class="card" id="scen">${B('h2','Scenarios: what if conditions change?','Escenarios: ¿y si cambian las condiciones?')}
+`<div class="card" id="scen" data-tab="rotation">${B('h2','Scenarios: what if conditions change?','Escenarios: ¿y si cambian las condiciones?')}
 <div class="g2"><label><span id="lr"></span><input type="range" id="s_r" min="-30" max="30" step="5" value="0"></label><label><span id="lt"></span><input type="range" id="s_t" min="0" max="3" step="0.5" value="0"></label></div>
 ${B('small','Sliders modify NASA POWER season rainfall and temperature before the rotation scores are computed. Use them to see whether the ranking is robust.','Los controles modifican la lluvia y temperatura de temporada de NASA POWER antes de calcular los puntajes. Úsalos para ver si el ranking es robusto.')}</div>
-<div class="card" id="rcmp">${B('h2','Rotation strategies compared','Comparación de estrategias de rotación')}
+<div class="card" id="rcmp" data-tab="rotation">${B('h2','Rotation strategies compared','Comparación de estrategias de rotación')}
 <label><b data-es="Tu rotación actual:">Your current rotation:</b> <select id="curRot">${ROTS.map(r=>`<option value="${r[0]}">${r[0]}</option>`).join('')}</select></label>
 <div id="rdet" class="g2" style="margin-top:12px"></div></div>`);
-const mth=[...document.querySelectorAll('main > .card')].pop();
-mth.insertAdjacentHTML('beforebegin',
-`<div class="g2"><div class="card">${B('h2','Vegetation cover and bare-soil periods (MODIS NDVI)','Cobertura vegetal y periodos de suelo desnudo (NDVI MODIS)')}${cn('cN')}<small id="ndn"></small></div>
-<div class="card">${B('h2','Rainfall cross-check: NASA POWER vs independent source (season mm)','Verificación de lluvia: NASA POWER vs fuente independiente (mm de temporada)')}${cn('cI')}<small id="imn"></small></div></div>
-<div class="card">${B('h2','Terrain and erosion risk (SRTM)','Terreno y riesgo de erosión (SRTM)')}<div id="trn"></div></div>
-<div class="card">${B('h2','Glossary: what these terms mean','Glosario: qué significan estos términos')}
-${[['Evapotranspiration (ET)','Water that leaves the field through the soil surface and through plant leaves. High ET with low rain means water stress.','Evapotranspiración (ET)','Agua que sale del campo por el suelo y por las hojas de las plantas. ET alta con poca lluvia significa estrés hídrico.'],
+const mth=document.querySelector('main > .card[data-tab="method"]');
+const GL=[['Evapotranspiration (ET)','Water that leaves the field through the soil surface and through plant leaves. High ET with low rain means water stress.','Evapotranspiración (ET)','Agua que sale del campo por el suelo y por las hojas de las plantas. ET alta con poca lluvia significa estrés hídrico.'],
 ['NDVI','Index of vegetation greenness from satellite (about 0 = bare soil, 0.8 = dense healthy crop). Drops show bare fields or stress.','NDVI','Índice de verdor de la vegetación desde satélite (cerca de 0 = suelo desnudo, 0.8 = cultivo denso y sano). Las caídas muestran campos desnudos o estrés.'],
 ['Root-zone soil wetness / anomaly','Fraction of water available to roots (0 dry–1 saturated). An anomaly is the difference from the long-term normal for that time of year.','Humedad de zona de raíces / anomalía','Fracción de agua disponible para las raíces (0 seco–1 saturado). Una anomalía es la diferencia frente a lo normal de esa época.'],
 ['Frost risk','Chance of temperatures near 0 °C that damage crops. Low in most Mexican farmland but possible in high areas and the north in winter.','Riesgo de heladas','Probabilidad de temperaturas cercanas a 0 °C que dañan cultivos. Bajo en casi toda la zona agrícola de México, pero posible en zonas altas y en el norte en invierno.'],
 ['Water balance','Water in (rain, irrigation, stored soil water) minus water out (crop use and evaporation). This tool compares supply with each crop need.','Balance hídrico','Agua que entra (lluvia, riego, agua del suelo) menos agua que sale (uso del cultivo y evaporación). Esta herramienta compara el suministro con la necesidad de cada cultivo.'],
 ['Satellite vs ground data','Satellites cover large areas continuously but are coarse and indirect; ground sensors and field notes are precise but sparse. Combining both is best.','Datos satelitales vs de campo','Los satélites cubren grandes áreas de forma continua pero son gruesos e indirectos; los sensores y notas de campo son precisos pero escasos. Combinarlos es lo mejor.'],
-['Crop roles in rotation','Nitrogen-fixing legumes (bean) feed the next crop; cover crops protect and feed soil; deep-rooted crops (sorghum) open the soil and reach deeper water; drought-tolerant crops reduce risk in dry years.','Funciones de los cultivos en la rotación','Las leguminosas fijadoras de nitrógeno (frijol) alimentan al siguiente cultivo; las coberturas protegen y nutren el suelo; los cultivos de raíz profunda (sorgo) abren el suelo y alcanzan agua profunda; los tolerantes a sequía reducen riesgo en años secos.']]
-.map(g=>`<details style="margin:6px 0"><summary data-es="${g[2]}"><b>${g[0]}</b></summary>${B('p',g[1],g[3])}</details>`).join('')}</div>
-<div class="card">${B('h2','Uncertainty and where local expertise is needed','Incertidumbre y dónde se necesita experiencia local')}<ul>${[
-['Crop and soil parameters are typical ranges, not measurements of your field: validate with a local agronomist.','Los parámetros de cultivos y suelos son rangos típicos, no mediciones de tu campo: valídalos con un agrónomo local.'],
+['Crop roles in rotation','Nitrogen-fixing legumes (bean) feed the next crop; cover crops protect and feed soil; deep-rooted crops (sorghum) open the soil and reach deeper water; drought-tolerant crops reduce risk in dry years.','Funciones de los cultivos en la rotación','Las leguminosas fijadoras de nitrógeno (frijol) alimentan al siguiente cultivo; las coberturas protegen y nutren el suelo; los cultivos de raíz profunda (sorgo) abren el suelo y alcanzan agua profunda; los tolerantes a sequía reducen riesgo en años secos.']];
+const UN=[['Crop and soil parameters are typical ranges, not measurements of your field: validate with a local agronomist.','Los parámetros de cultivos y suelos son rangos típicos, no mediciones de tu campo: valídalos con un agrónomo local.'],
 ['Each region uses one grid cell (about 50 km): microclimates, slope and soil can differ a lot inside it.','Cada región usa una celda (unos 50 km): microclimas, pendiente y suelo pueden variar mucho dentro de ella.'],
 ['Scores are relative comparisons; the scenario sliders show how much the ranking depends on rainfall and temperature.','Los puntajes son comparaciones relativas; los controles de escenario muestran cuánto depende el ranking de la lluvia y la temperatura.'],
-['Market access, seed availability, pests, labor and farmer experience are not modeled and must be judged locally.','Acceso a mercado, semilla, plagas, mano de obra y experiencia del agricultor no se modelan y deben juzgarse localmente.']].map(x=>B('li',x[0],x[1])).join('')}</ul></div>`);
+['Market access, seed availability, pests, labor and farmer experience are not modeled and must be judged locally.','Acceso a mercado, semilla, plagas, mano de obra y experiencia del agricultor no se modelan y deben juzgarse localmente.']];
+mth.insertAdjacentHTML('beforebegin',
+`<div class="g2" data-tab="climate"><div class="card">${B('h2','Vegetation cover and bare-soil periods (MODIS NDVI)','Cobertura vegetal y periodos de suelo desnudo (NDVI MODIS)')}${cn('cN')}<small id="ndn"></small></div>
+<div class="card">${B('h2','Rainfall cross-check: NASA POWER vs independent source (season mm)','Verificación de lluvia: NASA POWER vs fuente independiente (mm de temporada)')}${cn('cI')}<small id="imn"></small></div></div>
+<div class="card" data-tab="climate">${B('h2','Terrain and erosion risk (SRTM)','Terreno y riesgo de erosión (SRTM)')}<div id="trn"></div></div>
+<div class="card" data-tab="faq">${B('h2','Glossary: what these terms mean','Glosario: qué significan estos términos')}${GL.map(g=>`<details><summary data-es="${g[2]}"><b>${g[0]}</b></summary>${B('p',g[1],g[3])}</details>`).join('')}</div>
+<div class="card" data-tab="method">${B('h2','Uncertainty and where local expertise is needed','Incertidumbre y dónde se necesita experiencia local')}<ul>${UN.map(x=>B('li',x[0],x[1])).join('')}</ul></div>`);
 
-// ---------- scenario wrapper ----------
 const orig=renderRot;
-function lab(){$('lr').textContent=L('Rainfall change','Cambio de lluvia')+': '+(SC.r>0?'+':'')+SC.r+' %';$('lt').textContent=L('Extra warming','Calentamiento adicional')+': +'+SC.t+' °C';[...$('curRot').options].forEach(o=>o.textContent=T(o.value))}
+function lab(){$('lr').textContent=Lg('Rainfall change','Cambio de lluvia')+': '+(SC.r>0?'+':'')+SC.r+' %';$('lt').textContent=Lg('Extra warming','Calentamiento adicional')+': +'+SC.t+' °C';[...$('curRot').options].forEach(o=>o.textContent=T(o.value))}
 renderRot=function(z){
   if(!z||!z.s||!z.d)return orig(z);
   const s=z.s,d=z.d,bk={rL:s.rL,tL:s.tL,dT:s.dT,R:d.R},k=1+SC.r/100;
@@ -373,33 +695,31 @@ renderRot=function(z){
 ['s_r','s_t'].forEach(id=>$(id).addEventListener('input',()=>{SC.r=+$('s_r').value;SC.t=+$('s_t').value;renderRot(ZONES[cur])}));
 $('curRot').addEventListener('change',()=>detail(ZONES[cur]));
 
-// ---------- rotation detail cards ----------
 function detail(z){
   const box=$('rdet');if(!box||!z||!z.s)return;
   const rows=[...document.querySelectorAll('#rres > div')].map(d=>{const b=d.querySelectorAll('b'),n=d.querySelector('small').textContent.match(/\d+/g).map(Number),nm=b[0].textContent,r=ROTS.find(x=>x[0]===nm||T(x[0])===nm);
     return r?{k:r[0],sc:+b[1].textContent,wn:n[0],wd:n[1],ht:n[2],sl:n[3],inc:n[4],cost:n[5]}:null}).filter(Boolean);
   const cu=$('curRot').value,base=rows.find(r=>r.k===cu);if(!base)return;
   const oth=rows.filter(r=>r.k!==cu),pick=[base,oth[0],oth[1]].filter(Boolean),k=1+SC.r/100;
-  const tag=[L('Current rotation','Rotación actual'),L('Top alternative','Mejor alternativa'),L('Second alternative','Segunda alternativa')];
+  const tag=[Lg('Current rotation','Rotación actual'),Lg('Top alternative','Mejor alternativa'),Lg('Second alternative','Segunda alternativa')];
   const steep=z.terr&&z.terr.slope>=8;
   box.innerHTML=pick.map((r,i)=>{const x=TX[r.k];
-    const why=i===0?L('Baseline for comparison: what the farm does today.','Línea base de comparación: lo que se hace hoy en la finca.')
-      :L(`Dry-year water coverage ${r.wd}% vs ${base.wd}% today; soil score ${r.sl} vs ${base.sl}; income ${r.inc} vs ${base.inc}; input-cost score ${r.cost} vs ${base.cost}.`,`Cobertura de agua en año seco ${r.wd}% vs ${base.wd}% hoy; suelo ${r.sl} vs ${base.sl}; ingreso ${r.inc} vs ${base.inc}; costo de insumos ${r.cost} vs ${base.cost}.`);
-    const ev=L(`NASA POWER: season rain ${Math.round(z.s.rL*k)} mm, warming ${(z.s.dT+SC.t).toFixed(2)} °C. Water coverage normal/dry year ${r.wn}/${r.wd}%, heat resilience ${r.ht}.`,`NASA POWER: lluvia de temporada ${Math.round(z.s.rL*k)} mm, calentamiento ${(z.s.dT+SC.t).toFixed(2)} °C. Cobertura de agua año normal/seco ${r.wn}/${r.wd}%, resiliencia al calor ${r.ht}.`);
-    const gap=L('No yield, market price, pest or local soil data; one grid cell per region; soil wetness is model-based.','Sin datos de rendimiento, precios, plagas ni suelo local; una celda por región; la humedad del suelo es de modelo.');
-    const rk=L(x[2],x[3])+(steep&&r.sl<70?L(' Slope is steep here: erosion control is needed.',' La pendiente es fuerte aquí: se necesita control de erosión.'):'');
+    const why=i===0?Lg('Baseline for comparison: what the farm does today.','Línea base de comparación: lo que se hace hoy en la finca.')
+      :Lg(`Dry-year water coverage ${r.wd}% vs ${base.wd}% today; soil score ${r.sl} vs ${base.sl}; income ${r.inc} vs ${base.inc}; input-cost score ${r.cost} vs ${base.cost}.`,`Cobertura de agua en año seco ${r.wd}% vs ${base.wd}% hoy; suelo ${r.sl} vs ${base.sl}; ingreso ${r.inc} vs ${base.inc}; costo de insumos ${r.cost} vs ${base.cost}.`);
+    const ev=Lg(`NASA POWER: season rain ${Math.round(z.s.rL*k)} mm, warming ${(z.s.dT+SC.t).toFixed(2)} °C. Water coverage normal/dry year ${r.wn}/${r.wd}%, heat resilience ${r.ht}.`,`NASA POWER: lluvia de temporada ${Math.round(z.s.rL*k)} mm, calentamiento ${(z.s.dT+SC.t).toFixed(2)} °C. Cobertura de agua año normal/seco ${r.wn}/${r.wd}%, resiliencia al calor ${r.ht}.`);
+    const gap=Lg('No yield, market price, pest or local soil data; one grid cell per region; soil wetness is model-based.','Sin datos de rendimiento, precios, plagas ni suelo local; una celda por región; la humedad del suelo es de modelo.');
+    const rk=Lg(x[2],x[3])+(steep&&r.sl<70?Lg(' Slope is steep here: erosion control is needed.',' La pendiente es fuerte aquí: se necesita control de erosión.'):'');
     const li=(h,t)=>`<p style="margin:6px 0"><b>${h}</b><br>${t}</p>`;
     return `<div style="border:1px solid var(--line);border-radius:12px;padding:12px;${i===0?'border-left:5px solid var(--warm)':''}"><small>${tag[i]} · ${Math.round(r.sc)}/100</small><h3 style="margin:2px 0 6px;font-size:16px">${T(r.k)}</h3>`
-      +li(L('Why suggested','Por qué se sugiere'),why)+li(L('Evidence','Evidencia'),ev)+li(L('Benefits','Beneficios'),L(x[0],x[1]))+li(L('Information gaps','Vacíos de información'),gap)+li(L('Risks for local review','Riesgos a revisar localmente'),rk)+'</div>'}).join('');
+      +li(Lg('Why suggested','Por qué se sugiere'),why)+li(Lg('Evidence','Evidencia'),ev)+li(Lg('Benefits','Beneficios'),Lg(x[0],x[1]))+li(Lg('Information gaps','Vacíos de información'),gap)+li(Lg('Risks for local review','Riesgos a revisar localmente'),rk)+'</div>'}).join('');
 }
 
-// ---------- MODIS NDVI (ORNL DAAC MODIS web service) ----------
-function drawNd(z){const n=$('ndn');n.closest('.card').style.display=z.nf?'none':'';if(chs.cN){chs.cN.destroy();delete chs.cN}
-  if(!z.nd){n.textContent=L(z.nf?'MODIS NDVI values unavailable right now.':'Loading MODIS NDVI… (can take about a minute)',z.nf?'Valores NDVI MODIS no disponibles por ahora.':'Cargando NDVI MODIS… (puede tardar cerca de un minuto)')+(z.nf?' ['+z.nf+'] '+L('Use the NDVI map layer (top-left of the map).','Usa la capa NDVI del mapa (arriba a la izquierda).'):'');return}
+function drawNd(z){const n=$('ndn');if(chs.cN){chs.cN.destroy();delete chs.cN}
+  if(!z.nd){n.textContent=Lg(z.nf?'MODIS NDVI values unavailable right now.':'Loading MODIS NDVI… (can take about a minute)',z.nf?'Valores NDVI MODIS no disponibles por ahora.':'Cargando NDVI MODIS… (puede tardar cerca de un minuto)')+(z.nf?' '+Lg('Use the NDVI map layer (top-left of the map).','Usa la capa NDVI del mapa (arriba a la izquierda).'):'');return}
   const d=z.nd;
-  chart('cN',{type:'line',data:{labels:d.map(p=>p[0].slice(5)),datasets:[{label:'NDVI MODIS MOD13Q1 '+NY,data:d.map(p=>p[1]),borderColor:css('--ok'),pointRadius:2,tension:.25},{label:L('Low-cover threshold (0.3)','Umbral de baja cobertura (0.3)'),data:d.map(()=>.3),borderColor:css('--warm'),borderDash:[6,5],pointRadius:0}]},options:{maintainAspectRatio:false}});
+  chart('cN',{type:'line',data:{labels:d.map(p=>p[0].slice(5)),datasets:[{label:'NDVI MODIS MOD13Q1 '+NY,data:d.map(p=>p[1]),borderColor:css('--ok'),pointRadius:2,tension:.25},{label:Lg('Low-cover threshold (0.3)','Umbral de baja cobertura (0.3)'),data:d.map(()=>.3),borderColor:css('--warm'),borderDash:[6,5],pointRadius:0}]},options:{maintainAspectRatio:false}});
   const ms=[...new Set(d.filter(p=>p[1]<.3).map(p=>+p[0].slice(5,7)))].map(m=>new Date(2000,m-1,1).toLocaleString(lang==='es'?'es':'en',{month:'short'}));
-  n.textContent=L(`Months with low cover (NDVI < 0.3), possibly bare soil: ${ms.join(', ')||'none'}. 250 m pixel at the region center, not a specific field.`,`Meses con baja cobertura (NDVI < 0.3), posible suelo desnudo: ${ms.join(', ')||'ninguno'}. Píxel de 250 m en el centro de la región, no un campo específico.`)}
+  n.textContent=Lg(`Months with low cover (NDVI < 0.3), possibly bare soil: ${ms.join(', ')||'none'}. 250 m pixel at the region center, not a specific field.`,`Meses con baja cobertura (NDVI < 0.3), posible suelo desnudo: ${ms.join(', ')||'ninguno'}. Píxel de 250 m en el centro de la región, no un campo específico.`)}
 async function loadNd(z){try{const f=n=>'A'+NY+String(n).padStart(3,'0');
   const parts=await Promise.all([[1,145],[161,305],[321,353]].map(async([a,b])=>{
     const r=await fetch(`https://modis.ornl.gov/rst/api/v1/MOD13Q1/subset?latitude=${z.lat}&longitude=${z.lon}&band=250m_16_days_NDVI&startDate=${f(a)}&endDate=${f(b)}&kmAboveBelow=0&kmLeftRight=0`,{signal:AbortSignal.timeout(90000)});
@@ -408,34 +728,29 @@ async function loadNd(z){try{const f=n=>'A'+NY+String(n).padStart(3,'0');
   o.sort((a,b)=>a[0]<b[0]?-1:1);if(!o.length)throw new Error('empty');z.nd=o}catch(e){z.nf=(e&&e.message)||'error'}
   if(z===ZONES[cur])drawNd(z)}
 
-// ---------- IMERG via NASA POWER ----------
 function drawIm(z){const n=$('imn');if(chs.cI){chs.cI.destroy();delete chs.cI}
-  if(!z.im){n.textContent=L(z.imf?'Independent rainfall data unavailable right now.':'Loading independent rainfall data…',z.imf?'Datos de lluvia independientes no disponibles por ahora.':'Cargando datos de lluvia independientes…')+(z.imf?' ['+z.imf+']':'');return}
+  if(!z.im){n.textContent=Lg(z.imf?'Independent rainfall data unavailable right now.':'Loading independent rainfall data…',z.imf?'Datos de lluvia independientes no disponibles por ahora.':'Cargando datos de lluvia independientes…');return}
   const ys=z.d.yrs.filter(y=>z.im[y]!==undefined),a=ys.map(y=>z.d.R[z.d.yrs.indexOf(y)]),b=ys.map(y=>z.im[y]),ma=mean(a),mb=mean(b);
   const r=sum(a.map((v,i)=>(v-ma)*(b[i]-mb)))/Math.sqrt(sum(a.map(v=>(v-ma)**2))*sum(b.map(v=>(v-mb)**2)));
   chart('cI',{type:'line',data:{labels:ys,datasets:[{label:'NASA POWER (PRECTOTCORR)',data:a.map(Math.round),borderColor:css('--acc'),pointRadius:2},{label:z.ims,data:b.map(Math.round),borderColor:css('--warm'),pointRadius:2}]},options:{maintainAspectRatio:false}});
-  n.textContent=L(`Comparison source: ${z.ims}. Correlation r = ${r.toFixed(2)}; mean difference ${Math.round(mb-ma)} mm. Large gaps flag years that local rain gauges should confirm.`,`Fuente de comparación: ${z.ims}. Correlación r = ${r.toFixed(2)}; diferencia media ${Math.round(mb-ma)} mm. Brechas grandes marcan años que deben confirmarse con pluviómetros locales.`)}
+  n.textContent=Lg(`Comparison source: ${z.ims}. Correlation r = ${r.toFixed(2)}; mean difference ${Math.round(mb-ma)} mm. Large gaps flag years that local rain gauges should confirm.`,`Fuente de comparación: ${z.ims}. Correlación r = ${r.toFixed(2)}; diferencia media ${Math.round(mb-ma)} mm. Brechas grandes marcan años que deben confirmarse con pluviómetros locales.`)}
 async function loadIm(z){
-  const ft=async u=>{const r=await fetch(u,{signal:AbortSignal.timeout(25000)});if(!r.ok)throw new Error('HTTP '+r.status);return r.json()},err=[];
+  const ft=async u=>{const r=await fetch(u,{signal:AbortSignal.timeout(25000)});if(!r.ok)throw new Error('HTTP '+r.status);return r.json()};
+  const tot=(times,vals)=>{const o={},c={};times.forEach((y,i)=>{const [yy,m,v]=[y[0],y[1],vals[i]];if(MS.includes(m)&&v!=null&&v>-900){o[yy]=(o[yy]||0)+v;c[yy]=(c[yy]||0)+1}});Object.keys(o).forEach(y=>{if(c[y]<140)delete o[y]});if(!Object.keys(o).length)throw new Error('empty');return o};
   try{
     const parts=await Promise.all([[2001,2010],[2011,2018],[2019,2025]].map(([a,b])=>ft(`https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG&longitude=${z.lon}&latitude=${z.lat}&start=${a}0101&end=${b}1231&format=JSON`))),P={};
     parts.forEach(j=>Object.assign(P,j.properties.parameter.IMERG_PRECTOT));
-    const o={},c={};for(const k in P){const y=+k.slice(0,4),m=+k.slice(4,6);if(MS.includes(m)&&P[k]>-900){o[y]=(o[y]||0)+P[k];c[y]=(c[y]||0)+1}}
-    Object.keys(o).forEach(y=>{if(c[y]<140)delete o[y]});if(!Object.keys(o).length)throw new Error('empty');
-    z.im=o;z.ims='GPM IMERG (NASA)';
-  }catch(e){err.push('IMERG '+e.message);
-    try{const j=await ft(`https://archive-api.open-meteo.com/v1/archive?latitude=${z.lat}&longitude=${z.lon}&start_date=2001-01-01&end_date=${Y1}-12-31&daily=precipitation_sum&timezone=UTC`),o={},c={};
-      j.daily.time.forEach((t,i)=>{const y=+t.slice(0,4),m=+t.slice(5,7),v=j.daily.precipitation_sum[i];if(MS.includes(m)&&v!=null){o[y]=(o[y]||0)+v;c[y]=(c[y]||0)+1}});
-      Object.keys(o).forEach(y=>{if(c[y]<140)delete o[y]});if(!Object.keys(o).length)throw new Error('empty');
-      z.im=o;z.ims='ERA5 (ECMWF)';
-    }catch(e2){err.push('ERA5 '+e2.message);z.imf=err.join(' | ')}}
+    const ks=Object.keys(P);z.im=tot(ks.map(k=>[+k.slice(0,4),+k.slice(4,6)]),ks.map(k=>P[k]));z.ims='GPM IMERG (NASA)';
+  }catch(e){
+    try{const j=await ft(`https://archive-api.open-meteo.com/v1/archive?latitude=${z.lat}&longitude=${z.lon}&start_date=2001-01-01&end_date=${Y1}-12-31&daily=precipitation_sum&timezone=UTC`);
+      z.im=tot(j.daily.time.map(t=>[+t.slice(0,4),+t.slice(5,7)]),j.daily.precipitation_sum);z.ims='ERA5 (ECMWF)';
+    }catch(e2){z.imf=1}}
   if(z===ZONES[cur])drawIm(z)}
 
-// ---------- SRTM slope (OpenTopoData SRTM 30 m) ----------
 function drawTerr(z){const n=$('trn');
-  if(!z.terr){n.textContent=L(z.tf?'Terrain data unavailable right now.':'Loading SRTM terrain…',z.tf?'Datos de terreno no disponibles por ahora.':'Cargando terreno SRTM…');return}
+  if(!z.terr){n.textContent=Lg(z.tf?'Terrain data unavailable right now.':'Loading SRTM terrain…',z.tf?'Datos de terreno no disponibles por ahora.':'Cargando terreno SRTM…');return}
   const s=z.terr.slope,c=s<3?['low','bajo']:s<8?['moderate','moderado']:['high','alto'];
-  n.innerHTML=L(`Elevation <b>${Math.round(z.terr.el)} m</b> · mean slope around the point (about 1 km) <b>${s.toFixed(1)} %</b> → erosion risk from terrain: <b>${c[0]}</b>. Field-level slope can be steeper: check on site.`,`Elevación <b>${Math.round(z.terr.el)} m</b> · pendiente media alrededor del punto (cerca de 1 km) <b>${s.toFixed(1)} %</b> → riesgo de erosión por terreno: <b>${c[1]}</b>. La pendiente dentro del campo puede ser mayor: verifica en sitio.`)+`<br><small>${L('Source: NASA SRTM 30 m via OpenTopoData.','Fuente: NASA SRTM 30 m vía OpenTopoData.')}</small>`}
+  n.innerHTML=Lg(`Elevation <b>${Math.round(z.terr.el)} m</b> · mean slope around the point (about 1 km) <b>${s.toFixed(1)} %</b> → erosion risk from terrain: <b>${c[0]}</b>. Field-level slope can be steeper: check on site.`,`Elevación <b>${Math.round(z.terr.el)} m</b> · pendiente media alrededor del punto (cerca de 1 km) <b>${s.toFixed(1)} %</b> → riesgo de erosión por terreno: <b>${c[1]}</b>. La pendiente dentro del campo puede ser mayor: verifica en sitio.`)+`<br><small>${Lg('Source: NASA SRTM 30 m via OpenTopoData.','Fuente: NASA SRTM 30 m vía OpenTopoData.')}</small>`}
 async function loadTerr(z){try{const d=.01,P=[[0,0],[d,0],[-d,0],[0,d],[0,-d]].map(([a,b])=>(z.lat+a).toFixed(4)+','+(z.lon+b).toFixed(4)).join('|'),
   e=(await (await fetch('https://api.opentopodata.org/v1/srtm30m?locations='+P,{signal:AbortSignal.timeout(20000)})).json()).results.map(r=>r.elevation);
   if(e.some(v=>v==null))throw 0;const dy=2*d*111320,dx=dy*Math.cos(z.lat*Math.PI/180);
@@ -444,16 +759,51 @@ async function loadTerr(z){try{const d=.01,P=[[0,0],[d,0],[-d,0],[0,d],[0,-d]].m
 
 $('map').insertAdjacentHTML('afterend',B('small','Click anywhere on the map (inside Mexico) to analyze that point.','Haz clic en cualquier parte del mapa (dentro de México) para analizar ese punto.','style="display:block"'));
 map.on('click',async e=>{const la=+e.latlng.lat.toFixed(2),lo=+e.latlng.lng.toFixed(2);if(la<14||la>33.5||lo<-119||lo>-86)return;
-  const z={n:L('Custom point','Punto personalizado')+' '+la+', '+lo,lat:la,lon:lo};setStatus('Loading NASA data…',{});
+  const z={n:Lg('Custom point','Punto personalizado')+' '+la+', '+lo,lat:la,lon:lo};setStatus('Loading NASA data…',{});
   try{await fetchZone(z)}catch(x){setStatus('Could not load NASA POWER data. Check your connection and reload.',{},1);return}
   ZONES.push(z);const i=ZONES.length-1;sel.add(new Option(z.n,i));
-  z.m=L.circleMarker([la,lo],{radius:8,color:'#fff',weight:2,fillColor:color(z.s.dT),fillOpacity:.9,bubblingMouseEvents:false}).addTo(map).bindTooltip(z.n).bindPopup('',{minWidth:240}).on('click',()=>show(i));
+  z.m=LF.circleMarker([la,lo],{radius:8,color:'#fff',weight:2,fillColor:color(z.s.dT),fillOpacity:.9,bubblingMouseEvents:false}).addTo(map).bindTooltip(z.n).bindPopup('',{minWidth:240}).on('click',()=>show(i));
   setStatus('Data: NASA POWER · {a}–{b} · {n} regions',{a:Y0,b:Y1,n:ZONES.filter(q=>q.s).length});show(i)});
 
-L.control.layers(null,{'NDVI MODIS (NASA GIBS, Aug 2024)':L.tileLayer('https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/2024-08-12/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png',{maxNativeZoom:9,maxZoom:13,opacity:.75,attribution:'NASA GIBS / MODIS NDVI'})},{position:'topleft'}).addTo(map);
-lab();
-if(ZONES[cur]&&ZONES[cur].s)renderRot(ZONES[cur]);
+LF.control.layers(null,{'NDVI MODIS (NASA GIBS, Aug 2024)':LF.tileLayer('https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/2024-08-12/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png',{maxNativeZoom:9,maxZoom:13,opacity:.75,attribution:'NASA GIBS / MODIS NDVI'})},{position:'topleft'}).addTo(map);
+lab();applyLang();applyView();
 })();
+// MaizeShift assistant: transparent rule-based first orientation; not an agronomic prescription.
+const farmForm=document.getElementById('farm-form');
+if(farmForm) farmForm.addEventListener('submit',ev=>{
+  ev.preventDefault();
+  const v=id=>document.getElementById(id).value;
+  const loc=v('farm-location').trim(),area=Number(v('farm-area')),prev=v('farm-prev'),water=v('farm-water'),soil=v('farm-soil'),goal=v('farm-goal'),season=v('farm-season');
+  const result=document.getElementById('farm-result');
+  let options=[],why=[],checks=[];
+  if(prev==='maiz'){
+    options=water==='temporal'?['Frijol (si el temporal y la fecha son adecuados)','Garbanzo o avena (según ventana de otoño-invierno)','Cultivo de cobertura adaptado a la humedad disponible']:['Frijol','Sorgo','Avena o cultivo de cobertura'];
+    why.push('Alternar maíz con una leguminosa puede diversificar la demanda de nutrientes y contribuir a romper ciclos de algunas plagas.');
+  }else if(prev==='frijol'){
+    options=['Maíz','Sorgo','Cereal de grano pequeño adaptado a la región'];
+    why.push('Un cereal después de una leguminosa puede aprovechar parte del nitrógeno residual, aunque la cantidad depende del manejo y de la biomasa incorporada.');
+  }else if(prev==='sorgo'){
+    options=['Frijol (si hay humedad y ventana adecuada)','Garbanzo','Cultivo de cobertura de bajo consumo de agua'];
+    why.push('Diversificar la familia botánica ayuda a evitar repetir de forma continua el mismo cultivo y sus problemas asociados.');
+  }else{
+    options=['Frijol','Maíz','Sorgo','Avena'];
+    why.push('Como no hay suficiente información del cultivo previo, estas alternativas solo sirven como punto de partida.');
+  }
+  if(water==='temporal') checks.push('Confirma la fecha probable de lluvias y la humedad almacenada; evita elegir un cultivo cuyo ciclo rebase el agua disponible.');
+  if(water==='limitado') checks.push('Estima el volumen real y oportunidad del riego de auxilio antes de seleccionar el cultivo.');
+  if(water==='riego') checks.push('Verifica disponibilidad legal y sostenible de agua, caudal, calidad y costo de bombeo.');
+  if(soil==='desconocido') checks.push('Solicita análisis de suelo: textura, pH, materia orgánica, conductividad eléctrica y nutrientes.');
+  if(soil==='arenoso') checks.push('En suelo arenoso, prioriza cobertura y manejo de riegos para reducir pérdidas por drenaje.');
+  if(soil==='arcilloso') checks.push('En suelo arcilloso, revisa drenaje y evita trabajar cuando esté demasiado húmedo para reducir compactación.');
+  if(goal==='suelo') checks.push('Considera cobertura vegetal, retención de residuos y una rotación con leguminosas adaptadas.');
+  if(goal==='agua') checks.push('Compara duración del ciclo, demanda de agua en etapas críticas y alternativas de cobertura que no compitan por humedad.');
+  if(goal==='diversificar') checks.push('Antes de sembrar, confirma comprador, precio, logística, semilla disponible y capacidad de manejo.');
+  if(goal==='costos') checks.push('Calcula costos de semilla, fertilización, control de malezas, mano de obra y cosecha para cada alternativa.');
+  if(season==='desconocida') checks.push('Define primero la ventana de siembra local con datos históricos y asesoría técnica.');
+  const esc= s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  result.innerHTML=`<h3>Orientación inicial para ${esc(loc)}</h3><p><b>Superficie registrada:</b> ${area.toLocaleString('es-MX')} ha · <b>Cultivo anterior:</b> ${esc(prev)} · <b>Agua:</b> ${esc(water)}.</p><h4>Alternativas que podrías evaluar</h4><ol>${options.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><h4>¿Por qué aparecen?</h4><ul>${why.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h4>Antes de decidir, verifica</h4><ul>${checks.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p><b>Importante:</b> no se calculan rendimientos ni se garantiza rentabilidad. La selección final requiere clima local, análisis de suelo, variedad, fecha de siembra, plagas y mercado. Esta orientación no sustituye a INIFAP ni a un asesor agronómico.</p>`;
+});
+
 
 </script>
 </body>
