@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="MaizeShift México: crop-rotation decision support using NASA POWER data. Code and illustrations created with AI assistance (Claude, Anthropic) under human direction.">
 <meta name="generator" content="AI-assisted code (Claude, Anthropic); directed and reviewed by Team Space Tapatíos">
-<title>MaizeShift México | Smart and sustainable agriculture</title>
+<title>MaizeShift México | Agricultura inteligente y sostenible</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js">
 </script>
@@ -52,7 +52,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sa
 .tab:hover{background:#ffffff12;border-color:#ffffff24;color:#fff}.tab.on{background:#1b8b55;color:white;border-color:#1b8b55;box-shadow:0 5px 16px #16844835}
 #sq{background:#fff;border-color:#d5e2e2;color:#102844;max-width:260px}
 main{max-width:1500px;padding:18px clamp(14px,2.5vw,38px) 50px}
-.hero-landing{min-height:490px;position:relative;isolation:isolate;overflow:hidden;border-radius:22px;background:#09253c url("assets/images/hero-maizefield.jpg") center 57%/cover no-repeat;box-shadow:0 18px 44px #08233b2c;margin:2px 0 20px;color:#fff}
+.hero-landing{min-height:490px;position:relative;isolation:isolate;overflow:hidden;border-radius:22px;background:#09253c url("assets/images/hero-maizefield.png") center 57%/cover no-repeat;box-shadow:0 18px 44px #08233b2c;margin:2px 0 20px;color:#fff}
 .hero-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(2,19,33,.9),rgba(4,27,42,.68) 46%,rgba(3,28,42,.06) 100%),linear-gradient(0deg,rgba(1,16,28,.48),transparent 45%)}
 .hero-content{max-width:760px;padding:clamp(32px,5vw,76px);position:relative}
 .eyebrow{font-size:11px;font-weight:800;letter-spacing:.18em;color:#a9e47b;margin:0 0 14px}.eyebrow.dark{color:#168448}
@@ -64,7 +64,7 @@ main{max-width:1500px;padding:18px clamp(14px,2.5vw,38px) 50px}
 .hero-location .pin{grid-row:span 2;font-size:26px;color:#9be34e}.hero-location small{color:#c9ded9}
 .hero-foot{position:absolute;bottom:16px;right:24px;left:24px;display:flex;justify-content:space-between;color:#d7e7df;font-size:10px;letter-spacing:.16em}
 .visual-strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin:18px 0 28px}
-.visual-tile{min-height:150px;border:0;border-radius:15px;overflow:hidden;position:relative;text-align:left;color:white;padding:16px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;background:linear-gradient(0deg,#061b2dd9,transparent 75%),url("assets/images/hero-maizefield.jpg") center/cover;box-shadow:0 8px 22px #0b2d3418;transition:.25s}
+.visual-tile{min-height:150px;border:0;border-radius:15px;overflow:hidden;position:relative;text-align:left;color:white;padding:16px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;background:linear-gradient(0deg,#061b2dd9,transparent 75%),url("assets/images/hero-maizefield.png") center/cover;box-shadow:0 8px 22px #0b2d3418;transition:.25s}
 .visual-tile:hover{transform:translateY(-4px);filter:saturate(1.15)}.visual-tile span{font-size:10px;letter-spacing:.15em;color:#c5eaa9}.visual-tile b{font-size:16px}
 .tile-corn{background-position:60% 80%}.tile-soil{background-position:50% 95%;filter:saturate(.8)}.tile-water{background:linear-gradient(135deg,#063f60,#0c9ab1)}.tile-climate{background:linear-gradient(135deg,#25466a,#7fa6b0)}.tile-tech{background-position:75% 55%}.tile-sustain{background:linear-gradient(135deg,#17472d,#8aa85a)}
 .home-intro{display:grid;grid-template-columns:minmax(260px,2fr) repeat(3,minmax(120px,.7fr));gap:18px;align-items:center;padding:24px 28px;border:1px solid #dce7e2;border-radius:18px;background:linear-gradient(115deg,#fff,#eef6f1);margin:20px 0}
@@ -98,11 +98,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 </style>
 </head>
 <body>
-<a class="skip-link" href="#inicio" data-es="Saltar al contenido principal">Skip to main content</a>
+<a class="skip-link" href="#inicio">Saltar al contenido principal</a>
 <header class="top brandbar">
   <a class="brand" href="#inicio" aria-label="MaizeShift México, inicio"><img src="assets/images/maizeshift-logo.svg" alt="Logotipo MaizeShift México"></a>
-  <div class="brand-copy"><span data-es="AGRICULTURA INTELIGENTE">SMART AGRICULTURE</span><strong data-es="PARA UN FUTURO SOSTENIBLE">FOR A SUSTAINABLE FUTURE</strong><small data-es="Ciencia, tecnología y campo para un México más resiliente.">Science, technology and farming for a more resilient Mexico.</small></div>
-  <div class="brand-meta"><span>SPACE TAPATÍOS</span><b>ORION33</b><button class="btn lang-btn" id="lang" type="button" aria-label="Change language / Cambiar idioma">ES</button></div>
+  <div class="brand-copy"><span>SMART AGRICULTURE</span><strong>FOR A SUSTAINABLE FUTURE</strong><small data-es="Ciencia, tecnología y campo para un México más resiliente.">Science, technology and farming for a more resilient Mexico.</small></div>
+  <div class="brand-meta"><span>SPACE TAPATÍOS</span><b>ORION33</b><button class="btn lang-btn" id="lang" type="button" aria-label="Cambiar idioma">EN</button></div>
 </header>
 <nav id="bar" aria-label="Navegación principal">
   <button class="tab" data-t="home" data-es="Inicio">Inicio</button>
@@ -124,15 +124,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   <section class="hero-landing" id="inicio" data-tab="home" aria-label="Presentación MaizeShift México">
     <div class="hero-shade"></div>
     <div class="hero-content">
-      <p class="eyebrow" data-es="AGRICULTURA INTELIGENTE · MÉXICO">SMART AGRICULTURE · MEXICO</p>
-      <h1 data-es="AGRICULTURA INTELIGENTE<br>PARA UN FUTURO <em>SOSTENIBLE</em>">SMART AGRICULTURE<br>FOR A <em>SUSTAINABLE</em> FUTURE</h1>
+      <p class="eyebrow">AGRICULTURA INTELIGENTE · MÉXICO</p>
+      <h1>SMART AGRICULTURE<br>FOR A <em>SUSTAINABLE</em> FUTURE</h1>
       <p data-es="Una plataforma de apoyo a las decisiones agrícolas para conocer cultivos, planificar rotaciones y cuidar los recursos de cada parcela.">A decision-support platform to explore crops, plan rotations and protect the resources of every farm.</p>
       <div class="hero-actions">
         <button class="action primary" data-go="crops" data-es="Explorar cultivos">Explorar cultivos</button>
         <button class="action blue" data-go="rotation" data-es="Planificar rotación">Planificar rotación</button>
         <button class="action light" data-go="assistant" data-es="Analizar mi parcela">Analizar mi parcela</button>
       </div>
-      <div class="hero-location"><span class="pin">⌖</span><b data-es="Jalisco, México">Jalisco, Mexico</b><small data-es="Enfoque regional · visión nacional">Regional focus · national vision</small></div>
+      <div class="hero-location"><span class="pin">⌖</span><b>Jalisco, México</b><small data-es="Enfoque regional · visión nacional">Regional focus · national vision</small></div>
     </div>
     <div class="hero-foot"><span>01 / 04</span><span>MAIZESHIFT MÉXICO — SPACE TAPATÍOS ORION33</span></div>
   </section>
@@ -147,7 +147,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   </section>
 
   <section class="home-intro" data-tab="home">
-    <div><span class="eyebrow dark" data-es="APOYO A DECISIONES · AGRICULTURA DE PRECISIÓN">DECISION SUPPORT · AGRICULTURA DE PRECISIÓN</span>
+    <div><span class="eyebrow dark">DECISION SUPPORT · AGRICULTURA DE PRECISIÓN</span>
       <h2 data-es="Decisiones informadas para parcelas más resilientes.">Informed decisions for more resilient farms.</h2>
       <p data-es="Integramos conocimiento agronómico, datos ambientales y herramientas prácticas. Las recomendaciones son orientativas y deben contrastarse con análisis y asesoría local.">We bring together agronomic knowledge, environmental data and practical tools. Recommendations are guidance and must be checked against field tests and local advice.</p>
     </div>
@@ -246,33 +246,33 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   </div>
 
   <section class="card" data-tab="crops" id="extended-crops">
-    <div class="section-heading"><div><span class="eyebrow dark" data-es="CATÁLOGO AGRÍCOLA">CROP CATALOG</span><h2 data-es="Más cultivos para explorar">More crops to explore</h2></div><span class="section-note" data-es="Fichas generales · verifica variedades y fechas localmente">General crop cards · verify varieties and dates locally</span></div>
+    <div class="section-heading"><div><span class="eyebrow dark">CATÁLOGO AGRÍCOLA</span><h2 data-es="Más cultivos para explorar">More crops to explore</h2></div><span class="section-note" data-es="Fichas generales · verifica variedades y fechas localmente">General crop cards · verify varieties and dates locally</span></div>
     <div class="crop-grid">
-      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3 data-es="Avena">Oat</h3><i>Avena sativa</i><p data-es="Cereal de clima templado; puede usarse para grano, forraje o cobertura.">Cool-season cereal for grain, forage or cover.</p><small data-es="Revisar: humedad, heladas y fecha de establecimiento.">Check: moisture, frost and planting date.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3 data-es="Trigo">Wheat</h3><i>Triticum aestivum</i><p data-es="Cereal de ciclo fresco; requiere elegir variedad y fecha según altitud y temperatura.">Cool-season cereal; variety and timing depend on elevation and temperature.</p><small data-es="Revisar: disponibilidad de agua y presión de enfermedades.">Check: water availability and disease pressure.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3 data-es="Cebada">Barley</h3><i>Hordeum vulgare</i><p data-es="Cereal adaptable; el destino puede ser grano, forraje o industria.">Adaptable cereal for grain, forage or processing.</p><small data-es="Revisar: contrato comercial y manejo nutricional.">Check: market contract and nutrient management.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3 data-es="Garbanzo">Chickpea</h3><i>Cicer arietinum</i><p data-es="Leguminosa de ciclo fresco; sensible al exceso de humedad en etapas críticas.">Cool-season legume, sensitive to excess moisture at critical stages.</p><small data-es="Revisar: drenaje, variedad y enfermedades.">Check: drainage, variety and diseases.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3 data-es="Lenteja">Lentil</h3><i>Lens culinaris</i><p data-es="Leguminosa de grano; puede diversificar sistemas de temporal en ambientes adecuados.">Grain legume that can diversify rainfed systems in suitable environments.</p><small data-es="Revisar: adaptación regional y mercado.">Check: regional adaptation and market.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🥜</span><h3 data-es="Cacahuate">Peanut</h3><i>Arachis hypogaea</i><p data-es="Leguminosa oleaginosa; requiere suelo suelto y buen drenaje para formar vainas.">Oilseed legume needing loose, well-drained soil for pod development.</p><small data-es="Revisar: textura, calcio y rotación sanitaria.">Check: texture, calcium and disease rotation.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3 data-es="Soya">Soybean</h3><i>Glycine max</i><p data-es="Leguminosa oleaginosa; la inoculación y el manejo del agua son importantes.">Oilseed legume; inoculation and water management matter.</p><small data-es="Revisar: inoculante, fotoperiodo y mercado.">Check: inoculant, photoperiod and market.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3>Avena</h3><i>Avena sativa</i><p data-es="Cereal de clima templado; puede usarse para grano, forraje o cobertura.">Cool-season cereal for grain, forage or cover.</p><small data-es="Revisar: humedad, heladas y fecha de establecimiento.">Check: moisture, frost and planting date.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3>Trigo</h3><i>Triticum aestivum</i><p data-es="Cereal de ciclo fresco; requiere elegir variedad y fecha según altitud y temperatura.">Cool-season cereal; variety and timing depend on elevation and temperature.</p><small data-es="Revisar: disponibilidad de agua y presión de enfermedades.">Check: water availability and disease pressure.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌾</span><h3>Cebada</h3><i>Hordeum vulgare</i><p data-es="Cereal adaptable; el destino puede ser grano, forraje o industria.">Adaptable cereal for grain, forage or processing.</p><small data-es="Revisar: contrato comercial y manejo nutricional.">Check: market contract and nutrient management.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3>Garbanzo</h3><i>Cicer arietinum</i><p data-es="Leguminosa de ciclo fresco; sensible al exceso de humedad en etapas críticas.">Cool-season legume, sensitive to excess moisture at critical stages.</p><small data-es="Revisar: drenaje, variedad y enfermedades.">Check: drainage, variety and diseases.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3>Lenteja</h3><i>Lens culinaris</i><p data-es="Leguminosa de grano; puede diversificar sistemas de temporal en ambientes adecuados.">Grain legume that can diversify rainfed systems in suitable environments.</p><small data-es="Revisar: adaptación regional y mercado.">Check: regional adaptation and market.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🥜</span><h3>Cacahuate</h3><i>Arachis hypogaea</i><p data-es="Leguminosa oleaginosa; requiere suelo suelto y buen drenaje para formar vainas.">Oilseed legume needing loose, well-drained soil for pod development.</p><small data-es="Revisar: textura, calcio y rotación sanitaria.">Check: texture, calcium and disease rotation.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🫘</span><h3>Soya</h3><i>Glycine max</i><p data-es="Leguminosa oleaginosa; la inoculación y el manejo del agua son importantes.">Oilseed legume; inoculation and water management matter.</p><small data-es="Revisar: inoculante, fotoperiodo y mercado.">Check: inoculant, photoperiod and market.</small></article>
       <article class="crop-mini"><span class="crop-symbol">🌿</span><h3>Alfalfa</h3><i>Medicago sativa</i><p data-es="Forrajera perenne de raíces profundas; necesita establecimiento y agua suficientes.">Deep-rooted perennial forage needing adequate establishment and water.</p><small data-es="Revisar: salinidad, drenaje y disponibilidad de riego.">Check: salinity, drainage and irrigation.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🌻</span><h3 data-es="Girasol">Sunflower</h3><i>Helianthus annuus</i><p data-es="Oleaginosa de raíz profunda; la respuesta depende de suelo, agua y variedad.">Deep-rooted oilseed; performance depends on soil, water and variety.</p><small data-es="Revisar: polinizadores, aves y mercado.">Check: pollinators, birds and market.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🌼</span><h3 data-es="Cártamo">Safflower</h3><i>Carthamus tinctorius</i><p data-es="Oleaginosa adaptada a ambientes semiáridos; necesita establecimiento oportuno.">Oilseed adapted to semi-arid settings; timely establishment is important.</p><small data-es="Revisar: ciclo, heladas y disponibilidad comercial.">Check: cycle, frost and market access.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🎃</span><h3 data-es="Calabaza">Squash</h3><i>Cucurbita spp.</i><p data-es="Puede integrarse en policultivos como la milpa; cubre parte del suelo.">Can be included in milpa polycultures and cover part of the soil.</p><small data-es="Revisar: espacio, sombra y competencia por agua.">Check: spacing, shade and water competition.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🍅</span><h3 data-es="Tomate">Tomato</h3><i>Solanum lycopersicum</i><p data-es="Hortaliza de alto valor potencial y manejo intensivo de agua y sanidad.">Vegetable with potential value and intensive water and pest management.</p><small data-es="Revisar: sistema de producción, plagas y mercado.">Check: production system, pests and market.</small></article>
-      <article class="crop-mini"><span class="crop-symbol">🌶️</span><h3 data-es="Chile">Chili pepper</h3><i>Capsicum annuum</i><p data-es="Hortaliza diversa en variedades; requiere manejo cuidadoso de plagas y agua.">Diverse vegetable crop requiring careful pest and water management.</p><small data-es="Revisar: variedad, sanidad y canal de venta.">Check: variety, crop health and market channel.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌻</span><h3>Girasol</h3><i>Helianthus annuus</i><p data-es="Oleaginosa de raíz profunda; la respuesta depende de suelo, agua y variedad.">Deep-rooted oilseed; performance depends on soil, water and variety.</p><small data-es="Revisar: polinizadores, aves y mercado.">Check: pollinators, birds and market.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌼</span><h3>Cártamo</h3><i>Carthamus tinctorius</i><p data-es="Oleaginosa adaptada a ambientes semiáridos; necesita establecimiento oportuno.">Oilseed adapted to semi-arid settings; timely establishment is important.</p><small data-es="Revisar: ciclo, heladas y disponibilidad comercial.">Check: cycle, frost and market access.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🎃</span><h3>Calabaza</h3><i>Cucurbita spp.</i><p data-es="Puede integrarse en policultivos como la milpa; cubre parte del suelo.">Can be included in milpa polycultures and cover part of the soil.</p><small data-es="Revisar: espacio, sombra y competencia por agua.">Check: spacing, shade and water competition.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🍅</span><h3>Tomate</h3><i>Solanum lycopersicum</i><p data-es="Hortaliza de alto valor potencial y manejo intensivo de agua y sanidad.">Vegetable with potential value and intensive water and pest management.</p><small data-es="Revisar: sistema de producción, plagas y mercado.">Check: production system, pests and market.</small></article>
+      <article class="crop-mini"><span class="crop-symbol">🌶️</span><h3>Chile</h3><i>Capsicum annuum</i><p data-es="Hortaliza diversa en variedades; requiere manejo cuidadoso de plagas y agua.">Diverse vegetable crop requiring careful pest and water management.</p><small data-es="Revisar: variedad, sanidad y canal de venta.">Check: variety, crop health and market channel.</small></article>
       <article class="crop-mini"><span class="crop-symbol">🌵</span><h3>Agave</h3><i>Agave tequilana</i><p data-es="Cultivo perenne emblemático de Jalisco; su ciclo es largo y requiere planeación territorial.">Iconic perennial crop of Jalisco with a long cycle and land-planning needs.</p><small data-es="Revisar: pendiente, erosión, sanidad y reglas de denominación.">Check: slope, erosion, plant health and designation rules.</small></article>
     </div>
     <p class="caution" data-es="Estas fichas son una introducción educativa, no paquetes tecnológicos ni recomendaciones de siembra. Consulta INIFAP y asesores locales para fechas, densidades, variedades y fertilización.">These cards are educational introductions, not technical packages or planting recommendations. Consult INIFAP and local advisors for dates, density, varieties and fertilization.</p>
   </section>
 
   <section class="card" data-tab="association" id="association">
-    <div class="section-heading"><div><span class="eyebrow dark" data-es="POLICULTIVOS">POLYCULTURES</span><h2 data-es="Asociación de cultivos: diseñar biodiversidad">Crop associations: designing biodiversity</h2></div></div>
+    <div class="section-heading"><div><span class="eyebrow dark">POLICULTIVOS</span><h2 data-es="Asociación de cultivos: diseñar biodiversidad">Crop associations: designing biodiversity</h2></div></div>
     <div class="association-layout">
       <div class="assoc-diagram" role="img" aria-label="Diagrama esquemático de milpa con maíz, frijol y calabaza">
-        <div class="assoc-row"><span class="plant maize" data-es="Maíz">Maize</span><span class="plant bean" data-es="Frijol">Bean</span><span class="plant maize" data-es="Maíz">Maize</span></div>
-        <div class="assoc-row"><span class="plant squash" data-es="Calabaza">Squash</span><span class="plant bean" data-es="Frijol">Bean</span><span class="plant squash" data-es="Calabaza">Squash</span></div>
-        <div class="assoc-row"><span class="plant maize" data-es="Maíz">Maize</span><span class="plant squash" data-es="Calabaza">Squash</span><span class="plant maize" data-es="Maíz">Maize</span></div>
+        <div class="assoc-row"><span class="plant maize">Maíz</span><span class="plant bean">Frijol</span><span class="plant maize">Maíz</span></div>
+        <div class="assoc-row"><span class="plant squash">Calabaza</span><span class="plant bean">Frijol</span><span class="plant squash">Calabaza</span></div>
+        <div class="assoc-row"><span class="plant maize">Maíz</span><span class="plant squash">Calabaza</span><span class="plant maize">Maíz</span></div>
         <small data-es="Esquema conceptual, no plano de siembra a escala.">Conceptual scheme, not a scaled planting plan.</small>
       </div>
       <div><h3 data-es="Milpa: complementariedad con manejo">Milpa: complementarity through management</h3>
@@ -286,26 +286,26 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   </section>
 
   <section class="card" data-tab="milpa" id="soil-science">
-    <div class="section-heading"><div><span class="eyebrow dark" data-es="SUELO · BASE DE LA PRODUCCIÓN">SOIL · THE BASIS OF PRODUCTION</span><h2 data-es="Conoce el perfil y la salud de tu suelo">Understand your soil profile and soil health</h2></div></div>
+    <div class="section-heading"><div><span class="eyebrow dark">SUELO · BASE DE LA PRODUCCIÓN</span><h2 data-es="Conoce el perfil y la salud de tu suelo">Understand your soil profile and soil health</h2></div></div>
     <div class="soil-layout">
       <div class="soil-profile" role="img" aria-label="Diagrama educativo de capas del suelo">
-        <div class="soil-layer topsoil"><b data-es="Horizonte A">Horizon A</b><span data-es="Materia orgánica y raíces">Organic matter and roots</span></div>
-        <div class="soil-layer subsoil"><b data-es="Horizonte B">Horizon B</b><span data-es="Acumulación de arcillas y minerales">Clay and mineral accumulation</span></div>
-        <div class="soil-layer parent"><b data-es="Horizonte C">Horizon C</b><span data-es="Material parental meteorizado">Weathered parent material</span></div>
-        <div class="soil-layer rock"><b data-es="Roca">Bedrock</b><span data-es="Material consolidado">Consolidated material</span></div>
+        <div class="soil-layer topsoil"><b>Horizonte A</b><span data-es="Materia orgánica y raíces">Organic matter and roots</span></div>
+        <div class="soil-layer subsoil"><b>Horizonte B</b><span data-es="Acumulación de arcillas y minerales">Clay and mineral accumulation</span></div>
+        <div class="soil-layer parent"><b>Horizonte C</b><span data-es="Material parental meteorizado">Weathered parent material</span></div>
+        <div class="soil-layer rock"><b>Roca</b><span data-es="Material consolidado">Consolidated material</span></div>
       </div>
       <div class="soil-topics">
         <article><b>pH</b><p data-es="Influye en la disponibilidad de nutrientes; medir antes de corregir.">Influences nutrient availability; measure before amending.</p></article>
         <article><b>N · P · K</b><p data-es="Nitrógeno, fósforo y potasio cumplen funciones distintas; ajustar con análisis.">Nitrogen, phosphorus and potassium have distinct roles; adjust using soil tests.</p></article>
-        <article><b data-es="Materia orgánica">Organic matter</b><p data-es="Favorece agregación, actividad biológica y retención de agua.">Supports aggregation, biological activity and water retention.</p></article>
-        <article><b data-es="Erosión y compactación">Erosion and compaction</b><p data-es="Cobertura, raíces y tránsito controlado ayudan a proteger la estructura.">Cover, roots and controlled traffic help protect structure.</p></article>
+        <article><b>Materia orgánica</b><p data-es="Favorece agregación, actividad biológica y retención de agua.">Supports aggregation, biological activity and water retention.</p></article>
+        <article><b>Erosión y compactación</b><p data-es="Cobertura, raíces y tránsito controlado ayudan a proteger la estructura.">Cover, roots and controlled traffic help protect structure.</p></article>
       </div>
     </div>
     <p class="caution" data-es="Un color o una imagen no sustituyen un análisis de laboratorio. Para diagnosticar fertilidad, salinidad o deficiencias, toma muestras representativas y consulta un laboratorio o asesor agronómico.">Color or imagery cannot replace laboratory analysis. For fertility, salinity or deficiency diagnosis, take representative samples and consult a laboratory or agronomist.</p>
   </section>
 
   <section class="card" data-tab="techniques" id="techniques">
-    <div class="section-heading"><div><span class="eyebrow dark" data-es="MANEJO SOSTENIBLE">SUSTAINABLE MANAGEMENT</span><h2 data-es="Prácticas para conservar los recursos">Practices to conserve resources</h2></div></div>
+    <div class="section-heading"><div><span class="eyebrow dark">MANEJO SOSTENIBLE</span><h2 data-es="Prácticas para conservar los recursos">Practices to conserve resources</h2></div></div>
     <div class="practice-grid">
       <article><span>01</span><h3 data-es="Compostaje">Composting</h3><p data-es="Mezcla residuos ricos en carbono y nitrógeno, conserva humedad y airea la pila. El compost maduro debe oler a tierra.">Mix carbon- and nitrogen-rich residues, maintain moisture and aerate the pile. Mature compost should smell earthy.</p></article>
       <article><span>02</span><h3 data-es="Cultivos de cobertura">Cover crops</h3><p data-es="Mantienen el suelo protegido entre ciclos; elige especies y fecha de terminación según agua disponible.">Protect soil between cycles; choose species and termination timing based on water availability.</p></article>
@@ -317,7 +317,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   </section>
 
   <section class="card" data-tab="climate" id="water-climate">
-    <div class="section-heading"><div><span class="eyebrow dark" data-es="AGUA Y CLIMA">WATER AND CLIMATE</span><h2 data-es="Usar el agua con criterio">Use water thoughtfully</h2></div></div>
+    <div class="section-heading"><div><span class="eyebrow dark">AGUA Y CLIMA</span><h2 data-es="Usar el agua con criterio">Use water thoughtfully</h2></div></div>
     <div class="water-grid">
       <article><div class="water-icon">滴</div><h3 data-es="Goteo">Drip irrigation</h3><p data-es="Entrega agua cerca de la zona radicular; requiere filtración, mantenimiento y diseño adecuado.">Delivers water near roots; requires filtration, maintenance and sound design.</p></article>
       <article><div class="water-icon">≈</div><h3 data-es="Aspersión">Sprinkler</h3><p data-es="Distribuye agua mediante presión; viento, evaporación y uniformidad afectan su eficiencia.">Distributes pressurized water; wind, evaporation and uniformity affect efficiency.</p></article>
@@ -327,7 +327,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   </section>
 
   <section class="card" data-tab="assistant" id="assistant">
-    <div class="section-heading"><div><span class="eyebrow dark" data-es="ASISTENTE AGRÍCOLA">FARM ASSISTANT</span><h2 data-es="Cuéntanos sobre tu parcela">Tell us about your farm</h2></div><span class="section-note" data-es="Orientación inicial · no sustituye asesoría técnica">Initial guidance · not a substitute for technical advice</span></div>
+    <div class="section-heading"><div><span class="eyebrow dark">ASISTENTE AGRÍCOLA</span><h2 data-es="Cuéntanos sobre tu parcela">Tell us about your farm</h2></div><span class="section-note" data-es="Orientación inicial · no sustituye asesoría técnica">Initial guidance · not a substitute for technical advice</span></div>
     <form id="farm-form" class="farm-form">
       <label><span data-es="Ubicación (municipio o localidad)">Location (municipality or town)</span><input id="farm-location" required placeholder="Ej. Tepatitlán, Jalisco"></label>
       <label><span data-es="Superficie (hectáreas)">Area (hectares)</span><input id="farm-area" type="number" min="0.01" step="0.01" required placeholder="Ej. 5"></label>
@@ -342,19 +342,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   </section>
 
   <section class="card" data-tab="calendar" id="calendar">
-    <div class="section-heading"><div><span class="eyebrow dark" data-es="PLANIFICACIÓN">PLANNING</span><h2 data-es="Calendario agrícola orientativo">Indicative agricultural calendar</h2></div></div>
+    <div class="section-heading"><div><span class="eyebrow dark">PLANIFICACIÓN</span><h2 data-es="Calendario agrícola orientativo">Indicative agricultural calendar</h2></div></div>
     <div class="calendar-grid">
-      <article><b data-es="ENE – FEB">JAN – FEB</b><p data-es="Revisar análisis de suelo, planear compras, reparar equipos y definir rotaciones.">Review soil tests, plan purchases, repair equipment and define rotations.</p></article>
-      <article><b data-es="MAR – MAY">MAR – MAY</b><p data-es="Preparar conservación de humedad, revisar semillas y monitorear pronósticos estacionales.">Prepare moisture conservation, check seed and monitor seasonal outlooks.</p></article>
-      <article><b data-es="JUN – JUL">JUN – JUL</b><p data-es="Con el inicio de lluvias, verificar humedad y oportunidad de siembra según región.">With the onset of rains, check moisture and planting windows by region.</p></article>
-      <article><b data-es="AGO – OCT">AUG – OCT</b><p data-es="Monitorear malezas, plagas, nutrición y etapas sensibles del cultivo.">Monitor weeds, pests, nutrition and sensitive crop stages.</p></article>
-      <article><b data-es="NOV – DIC">NOV – DEC</b><p data-es="Planear cosecha, manejo de residuos y cultivos de cobertura según disponibilidad de agua.">Plan harvest, residue management and cover crops according to water availability.</p></article>
+      <article><b>ENE – FEB</b><p data-es="Revisar análisis de suelo, planear compras, reparar equipos y definir rotaciones.">Review soil tests, plan purchases, repair equipment and define rotations.</p></article>
+      <article><b>MAR – MAY</b><p data-es="Preparar conservación de humedad, revisar semillas y monitorear pronósticos estacionales.">Prepare moisture conservation, check seed and monitor seasonal outlooks.</p></article>
+      <article><b>JUN – JUL</b><p data-es="Con el inicio de lluvias, verificar humedad y oportunidad de siembra según región.">With the onset of rains, check moisture and planting windows by region.</p></article>
+      <article><b>AGO – OCT</b><p data-es="Monitorear malezas, plagas, nutrición y etapas sensibles del cultivo.">Monitor weeds, pests, nutrition and sensitive crop stages.</p></article>
+      <article><b>NOV – DIC</b><p data-es="Planear cosecha, manejo de residuos y cultivos de cobertura según disponibilidad de agua.">Plan harvest, residue management and cover crops according to water availability.</p></article>
     </div>
     <p class="caution" data-es="Las ventanas varían por altitud, región, variedad, humedad y sistema de producción. Este calendario no es una fecha de siembra oficial.">Windows vary by elevation, region, variety, moisture and production system. This is not an official planting-date calendar.</p>
   </section>
 
   <section class="card" data-tab="library" id="library">
-    <div class="section-heading"><div><span class="eyebrow dark" data-es="BIBLIOTECA EDUCATIVA">EDUCATIONAL LIBRARY</span><h2 data-es="Aprender para decidir mejor">Learn to make better decisions</h2></div></div>
+    <div class="section-heading"><div><span class="eyebrow dark">BIBLIOTECA EDUCATIVA</span><h2 data-es="Aprender para decidir mejor">Learn to make better decisions</h2></div></div>
     <div class="library-grid">
       <a href="https://www.gob.mx/inifap" target="_blank" rel="noopener"><b>INIFAP</b><span data-es="Paquetes tecnológicos, investigación y recomendaciones regionales.">Technical packages, research and regional recommendations.</span></a>
       <a href="https://www.fao.org/conservation-agriculture/es/" target="_blank" rel="noopener"><b>FAO</b><span data-es="Agricultura de conservación, suelo y manejo sostenible.">Conservation agriculture, soil and sustainable management.</span></a>
@@ -398,7 +398,7 @@ async function fetchZone(z){
 const color=dT=>dT<.3?'#4a90e2':dT<.7?'#f5c542':'#e0701b';
 
 const WX={0:['Clear sky','☀️'],1:['Mostly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],45:['Fog','🌫️'],48:['Fog','🌫️'],51:['Light drizzle','🌦️'],53:['Drizzle','🌦️'],55:['Heavy drizzle','🌧️'],61:['Light rain','🌦️'],63:['Rain','🌧️'],65:['Heavy rain','🌧️'],80:['Rain showers','🌦️'],81:['Rain showers','🌧️'],82:['Violent showers','⛈️'],95:['Thunderstorm','⛈️'],96:['Thunderstorm with hail','⛈️'],99:['Thunderstorm with hail','⛈️']};
-let lang='en',lastSt=['Loading NASA data…',{}];
+let lang='es',lastSt=['Loading NASA data…',{}];
 const ES={'Maize monoculture':'Maíz continuo','Maize–Bean':'Maíz–Frijol','Maize–Maize–Bean':'Maíz–Maíz–Frijol','Maize–Sorghum':'Maíz–Sorgo','Maize–Bean–Sorghum':'Maíz–Frijol–Sorgo','Maize–Bean + cover crop':'Maíz–Frijol + cultivo de cobertura','Water':'Agua','Heat':'Calor','Soil':'Suelo','Income':'Ingreso','Low cost':'Bajo costo',
 '<b>Top pick:</b> {n} ({s}/100), {d} points above continuous maize.':'<b>Mejor opción:</b> {n} ({s}/100), {d} puntos sobre el maíz continuo.',
 'In a dry year ({r} mm of rain) this rotation covers {c}% of crop water needs; continuous maize covers {m}%.':'En un año seco ({r} mm de lluvia) esta rotación cubre {c}% de las necesidades de agua; el maíz continuo cubre {m}%.',
@@ -424,7 +424,7 @@ const ES={'Maize monoculture':'Maíz continuo','Maize–Bean':'Maíz–Frijol','
 'Clear sky':'Despejado','Mostly clear':'Mayormente despejado','Partly cloudy':'Parcialmente nublado','Overcast':'Nublado','Fog':'Niebla','Light drizzle':'Llovizna ligera','Drizzle':'Llovizna','Heavy drizzle':'Llovizna fuerte','Light rain':'Lluvia ligera','Heavy rain':'Lluvia fuerte','Rain showers':'Chubascos','Violent showers':'Chubascos fuertes','Thunderstorm':'Tormenta eléctrica','Thunderstorm with hail':'Tormenta con granizo','Variable conditions':'Condiciones variables'};
 const T=(k,o={})=>((lang==='es'&&ES[k])||k).replace(/\{(\w+)\}/g,(m,n)=>o[n]!==undefined?o[n]:m);
 function setStatus(k,o,e){lastSt=[k,o,e];st.style.color=e?'#d33':'var(--mut)';st.textContent=T(k,o)}
-function applyLang(){document.documentElement.lang=lang;document.title=lang==='es'?'MaizeShift México | Agricultura inteligente y sostenible':'MaizeShift México | Smart and sustainable agriculture';document.querySelectorAll('[data-es]').forEach(el=>{if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;el.innerHTML=lang==='es'?el.dataset.es:el.dataset.en});document.getElementById('lang').textContent=lang==='es'?'EN':'ES';setStatus(...lastSt);applyView();renderHero();renderCat()}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll('[data-es]').forEach(el=>{if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;el.innerHTML=lang==='es'?el.dataset.es:el.dataset.en});document.getElementById('lang').textContent=lang==='es'?'EN':'ES';setStatus(...lastSt);applyView();renderHero();renderCat()}
 document.getElementById('lang').onclick=()=>{lang=lang==='es'?'en':'es';applyLang();if(ZONES[cur]&&ZONES[cur].s)show(cur)};
 
 function infoBase(z){const s=z.s,sg=v=>(v>=0?'+':'')+v;
@@ -639,7 +639,7 @@ function show(i){
   document.getElementById('advice').innerHTML='<ul>'+a.map(x=>`<li>${x}</li>`).join('')+'</ul>';
   renderRot(z);z.hr?drawHot(z):(drawHot(z),loadHot(z));z.soil||z.sfail?drawSoil(z):(drawSoil(z),loadSoil(z));
 }
-applyLang();init();
+applyView();renderHero();renderCat();init();
 </script>
 <script>
 /* MaizeShift extras (fixed: helper renamed Lg so Leaflet L is not shadowed) */
